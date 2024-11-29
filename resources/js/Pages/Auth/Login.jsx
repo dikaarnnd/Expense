@@ -1,10 +1,10 @@
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import logBg from '../../../images/loginBg.png';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -22,15 +22,18 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
+        <GuestLayout bgImage={logBg}>
             <Head title="Log in" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="text-green-600 mb-4 text-sm font-medium">
                     {status}
                 </div>
             )}
-
+            <div className="mb-8 mt-8 flex-col space-y-2">
+                <h1> Log in </h1>
+                <p> Log into an account</p>
+            </div>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -49,7 +52,7 @@ export default function Login({ status, canResetPassword }) {
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-6">
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput
@@ -81,20 +84,27 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
+                    {/* {canResetPassword && (
                         <Link
                             href={route('password.request')}
                             className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                             Forgot your password?
                         </Link>
-                    )}
+                    )} */}
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
+                    {/* <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
-                    </PrimaryButton>
+                    </PrimaryButton> */}
+                    <button className="confirmBtn">Log in</button>
                 </div>
             </form>
+            <div className="my-4 flex items-end justify-end justify-items-center space-x-4 text-sm text-gray-600">
+                <p>Dont have an account?</p>
+                <Link href={route('register')} className="underlinedLink">
+                    Register
+                </Link>
+            </div>
         </GuestLayout>
     );
 }

@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-allWhite
+  
+}
+
+.appLabel {
+  @apply text-xl font-semibold text-primary;
+}
+
+h1 {
+  @apply text-3xl font-bold text-allBlack;
+}
+
+.confirmBtn {
+  @apply bg-primary text-allWhite py-2 px-4 rounded-md;
+  
+}
+
+.confirmBtn:hover {
+  @apply bg-darkprimary py-2 px-4 rounded-md
+  transition-all duration-300 ease-out;
+  
+} 
+
+.underlinedLink {
+  @apply text-primary font-medium;
+}
+
+.underlinedLink:hover {
+  @apply  underline
+}
+
