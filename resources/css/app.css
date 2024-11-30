@@ -34,3 +34,21 @@ h1 {
   @apply  underline
 }
 
+/* Core layout */
+.forBoxes section {
+  @apply my-auto p-4 bg-allWhite rounded-md border border-allBlack
+}
+
+
+
+/* Text Config */
+.boxLabel {
+  font-size: 20px;
+  @apply  text-paleBlack font-medium ;
+}
+
+
+.currency {
+  font-size: 32px;
+  @apply font-semibold ;
+}

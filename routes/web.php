@@ -14,14 +14,29 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/oldDashboard', function () {
+    return Inertia::render('oldDashboard');
+})->middleware(['auth', 'verified'])->name('oldDashboard');
+
+Route::get('/Dashboard', function () {
+    return Inertia::render('Core/Dashboard');
+})->name('Dashboard');
+
+Route::get('/History', function () {
+    return Inertia::render('Core/History');
+})->name('History');
+
+Route::get('/Expenses', function () {
+    return Inertia::render('Core/Expenses');
+})->name('Expenses');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
 
 require __DIR__.'/auth.php';
