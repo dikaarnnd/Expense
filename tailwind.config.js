@@ -14,6 +14,12 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                GLight: ['Geist-Light', 'sans-serif'],
+                GRegular: ['Geist-Regular', 'sans-serif'],
+                GMedium: ['Geist-Medium', 'sans-serif'],
+                GSemibold: ['Geist-Semibold', 'sans-serif'],
+                GBold: ['Geist-Bold', 'sans-serif'],
+                GBLACK: ['Geist-Black', 'sans-serif'],
             },
             colors: {
                 allWhite: '#f1f1f1',
@@ -27,6 +33,7 @@ export default {
                 secondary: '#8756AE',
                 alert: '#BB2323',
             },
+            
         },
     },
 

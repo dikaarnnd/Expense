@@ -43,12 +43,50 @@ h1 {
 
 /* Text Config */
 .boxLabel {
-  font-size: 20px;
-  @apply  text-paleBlack font-medium ;
+  font-size: 16px;
+  @apply  text-paleBlack font-GLight;
 }
 
 
 .currency {
   font-size: 32px;
-  @apply font-semibold ;
+  @apply font-semibold font-GRegular ;
+}
+
+
+/* Fonts */
+@font-face {
+  font-family: Geist-Light;
+  src: url('../fonts/Geist-Light.otf')  format('opentype');;
+  
+}
+
+@font-face {
+  font-family: Geist-Regular;
+  src: url('../fonts/Geist-Regular.otf')  format('opentype');;
+  
+}
+
+@font-face {
+  font-family: Geist-Medium;
+  src: url('../fonts/Geist-Medium.otf')  format('opentype');;
+  
+}
+
+@font-face {
+  font-family: Geist-Semibold;
+  src: url('../fonts/Geist-SemiBold.otf')  format('opentype');;
+  
+}
+
+@font-face {
+  font-family: Geist-Bold;
+  src: url('../fonts/Geist-Bold.otf')  format('opentype');;
+  
+}
+
+@font-face {
+  font-family: Geist-Black;
+  src: url('../fonts/Geist-Black.otf')  format('opentype');;
+  
 }

@@ -21,7 +21,7 @@ export default function Dashboard() {
             <header className='grid grid-cols-7 gap-2  min-h-32 rounded-lg forBoxes'>
               <section className='col-span-2'>
                 <div className='flex items-center justify-between mr-2'>
-                  <h1 className='boxLabel'> Your Balance</h1>
+                  <h1 className='boxLabel '> Your Balance</h1>
                   <IconLink href={route('Expenses')} icon={FaEdit} className="text-subheading"/>
                 </div>
                   
@@ -34,7 +34,10 @@ export default function Dashboard() {
               </section>
 
               <section className='col-span-3 '>
-                <h1 className='boxLabel'> Total cash flow</h1>
+                <div className='flex justify-between items-center'>
+                  <h1 className='boxLabel'> Total cash flow</h1>
+                  <p className='mr-12'> (Your balance - Total expenses) </p>
+                </div>
                 <p className='currency text-alert'> IDR 45.000,00</p>
               </section>
 
