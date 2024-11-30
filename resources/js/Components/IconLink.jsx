@@ -7,7 +7,8 @@ const IconLink = ({
     size = '20px',
     target = '_self',
     className,
-    children
+    children,
+    reverse = false,
 }) => {
     return (
         <Link
@@ -23,8 +24,8 @@ const IconLink = ({
             }}
             
         >
-            <Icon />
-            {children}
+            {reverse ? children : <Icon />} {/* Conditional rendering of text and icon */}
+            {reverse ? <Icon /> : children} {/* Alternate order */}
         </Link>
     );
 };
