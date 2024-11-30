@@ -18,6 +18,7 @@ Route::get('/oldDashboard', function () {
     return Inertia::render('oldDashboard');
 })->middleware(['auth', 'verified'])->name('oldDashboard');
 
+//  Core operation pages
 Route::get('/Dashboard', function () {
     return Inertia::render('Core/Dashboard');
 })->name('Dashboard');
@@ -29,6 +30,7 @@ Route::get('/History', function () {
 Route::get('/Expenses', function () {
     return Inertia::render('Core/Expenses');
 })->name('Expenses');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
