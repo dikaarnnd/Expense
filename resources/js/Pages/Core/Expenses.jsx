@@ -49,10 +49,10 @@ export default function Dashboard() {
             />
           
           </div>
-          <header className='grid min-h-40 forBoxes'>
+          <header className='grid forBoxes'>
               <section>
                 
-                <ExpTable maxHeight="max-h-screen" showPagination={true} itemsPerPage={3}/>
+                <ExpTable maxHeight="max-h-72" showPagination={true} itemsPerPage={10}/>
               </section>  
             </header>
         </div>

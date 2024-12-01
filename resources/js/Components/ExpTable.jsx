@@ -72,38 +72,41 @@ export default function ExpTable({maxHeight, showPagination, itemsPerPage }) {
           </table>
         </div>
         {/* Conditionally Render Pagination */}
-        {showPagination && (
-          <div className="join">
-            {/* Previous Button */}
-            <button
-              className={`join-item btn ${currentPage === 1 ? 'btn-disabled' : ''}`}
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
+        <div className="mt-4 flex items-center justify-end ">
 
-            {/* Page Buttons */}
-            {[...Array(totalPages).keys()].map((page) => (
+          {showPagination && (
+            <div className="join ">
+              {/* Previous Button */}
               <button
-                key={page + 1}
-                className={`join-item btn ${currentPage === page + 1 ? 'btn-active' : ''}`}
-                onClick={() => handlePageChange(page + 1)}
+                className={`join-item btn ${currentPage === 1 ? 'btn-disabled' : ''}`}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
               >
-                {page + 1}
+                Previous
               </button>
-            ))}
 
-            {/* Next Button */}
-            <button
-              className={`join-item btn ${currentPage === totalPages ? 'btn-disabled' : ''}`}
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
-        )}
+              {/* Page Buttons */}
+              {[...Array(totalPages).keys()].map((page) => (
+                <button
+                  key={page + 1}
+                  className={`join-item pagingtab ${currentPage === page + 1 ? '' : ''}`}
+                  onClick={() => handlePageChange(page + 1)}
+                >
+                  {page + 1}
+                </button>
+              ))}
+
+              {/* Next Button */}
+              <button
+                className={`join-item btn ${currentPage === totalPages ? 'btn-disabled' : ''}`}
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
 }

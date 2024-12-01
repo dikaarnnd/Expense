@@ -83,7 +83,7 @@ export default function Dashboard() {
                       </div>
                     </div>
                   ))}
-                  <Link href={route('History')} className="underlinedLink my-4  block text-center w-24 mx-auto"> View more</Link>
+                  <Link href={route('History')} className="underlinedLink my-4  block text-center w-24 > View more</Link>
 
                 </div>
               </section>
