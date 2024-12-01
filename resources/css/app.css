@@ -16,6 +16,8 @@ h1 {
   @apply text-3xl font-GSemibold text-allBlack;
 }
 
+
+
 .confirmBtn {
   @apply bg-primary text-allWhite py-2 px-4 rounded-md;
   

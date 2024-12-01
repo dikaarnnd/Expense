@@ -98,7 +98,7 @@ export default function Dashboard() {
                     <p>Go to expenses</p> 
                   </IconLink>
                 </div>
-                <ExpTable/>
+                <ExpTable maxHeight="max-h-32" itemsPerPage={5}/>
               </section>  
             </header>
 

@@ -1,19 +1,62 @@
 /* eslint-disable prettier/prettier */
+import { Head } from '@inertiajs/react';
+
 import DrawerLayout from '@/Layouts/DrawerLayout';
+import ExpFilters from '@/Components/ExpFilters';
+import ExpTable from '@/Components/ExpTable';
+import IconLink from '@/Components/IconLink';
 
-import { Head, Link } from '@inertiajs/react';
 export default function Dashboard() {
-    return (
-      <>
-        <Head title="Expenses" />
-        <DrawerLayout>
-          <div className="p-6 h-screen">
-              <h1 className="text-2xl font-bold">Your expenses data</h1>
-              {/* Your Expenses Content */}
+  const handleCategorySelection = (selectedCategory) => {
+    console.log(`Selected category: ${selectedCategory}`);
+  };
+
+  const handleAmountSelection = (selectedAmount) => {
+    console.log(`Selected amount: ${selectedAmount}`);
+  };
+
+  const handleDateSelection = (selectedDate) => {
+    console.log(`Selected date: ${selectedDate}`);
+  };
+
+
+  const categoryOptions = ['All', 'Food', 'Transport', 'Entertainment', 'Utilities'];
+  const amountOptions = ['All', 'Highest', 'Lowest'];
+  const presetDateOptions = ['Recent', 'Yesterday', 'This week', 'This Month'];
+
+  return (
+    <>
+      <Head title="Expenses" />
+      <DrawerLayout>
+        <div className="p-6 min-h-svh space-y-2">
+          <h1 className="text-2xl">Your expenses data</h1>
+          
+          <div className='flex space-x-2 '>
+            <ExpFilters
+              label="Category"
+              options={categoryOptions}
+              onSelect={handleCategorySelection}  // Handle selected category
+            />
+            <ExpFilters
+              label="Amount(IDR)"
+              options={amountOptions}
+              onSelect={handleAmountSelection} // Handle selected amount
+            />
+            <ExpFilters
+              label="Date"
+              options={presetDateOptions}
+              onSelect={handleDateSelection} // Handle selected amount
+            />
+          
           </div>
-
-
-        </DrawerLayout>
-      </>
-    );
+          <header className='grid min-h-40 forBoxes'>
+              <section>
+                
+                <ExpTable maxHeight="max-h-screen" showPagination={true} itemsPerPage={3}/>
+              </section>  
+            </header>
+        </div>
+      </DrawerLayout>
+    </>
+  );
 }
