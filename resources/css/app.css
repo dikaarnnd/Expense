@@ -16,8 +16,6 @@ h1 {
   @apply text-3xl font-GSemibold text-allBlack;
 }
 
-
-
 .confirmBtn {
   @apply bg-primary text-allWhite py-2 px-4 rounded-md;
   
@@ -43,13 +41,37 @@ h1 {
   @apply hover:cursor-n-resize;
 }
 
-.pagingtab {
-  @apply text-allBlack text-sm font-medium px-6;
+
+.prevnext {
+  @apply text-darkprimary text-sm font-GRegular px-4 py-2
+  transition-all duration-300 ease-out;
 }
 
-.pagingtab:checked {
-  @apply text-allWhite bg-allBlack text-sm font-medium px-6 
+
+
+.prevnextDisabled {
+  @apply text-subheading text-sm font-GRegular px-4 py-2;
 }
+
+.pagingtab {
+  @apply text-darkprimary  font-GRegular px-4 py-2  
+  transition-all duration-300 ease-out;
+}
+
+.pagingtabOn {
+  @apply text-allWhite bg-darkprimary font-GRegular px-6 
+}
+/* .pagingtab:focus {
+  
+} */
+
+input:focus {
+  border-color: green;
+  background-color: lightyellow;
+}
+
+
+
 
 /* Core layout */
 .forBoxes section {
@@ -72,6 +94,13 @@ h1 {
 .categoryLabel {
   font-size: 16px;
   @apply text-darkprimary font-GRegular;
+}
+
+.truncated-notes {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px; /* Adjust the max-width as needed */
 }
 
 
