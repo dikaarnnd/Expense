@@ -8,14 +8,6 @@ body {
   
 }
 
-.appLabel {
-  @apply text-xl font-semibold text-primary;
-}
-
-h1 {
-  @apply text-3xl font-GSemibold text-allBlack;
-}
-
 .confirmBtn {
   @apply bg-primary text-allWhite py-2 px-4 rounded-md;
   
@@ -61,15 +53,10 @@ h1 {
 .pagingtabOn {
   @apply text-allWhite bg-darkprimary font-GRegular px-6 
 }
-/* .pagingtab:focus {
-  
-} */
 
-input:focus {
-  border-color: green;
-  background-color: lightyellow;
+.txtInput {
+  @apply text-allBlack font-GRegular rounded-sm bg-allWhite focus:bg-allWhite border-paleBlack  shadow-sm focus:border-primary focus:ring-primary;
 }
-
 
 
 
@@ -81,6 +68,16 @@ input:focus {
 
 
 /* Text Config */
+.appLabel {
+  @apply text-xl font-semibold text-primary;
+}
+
+h1 {
+  @apply text-3xl font-GSemibold text-allBlack;
+}
+
+
+
 .boxLabel {
   font-size: 16px;
   @apply  text-paleBlack font-GLight;
@@ -140,3 +137,4 @@ input:focus {
   src: url('../fonts/Geist-Black.otf')  format('opentype');;
   
 }
+

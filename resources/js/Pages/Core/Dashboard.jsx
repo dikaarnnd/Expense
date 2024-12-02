@@ -5,9 +5,11 @@ import DrawerLayout from '@/Layouts/DrawerLayout';
 import ExpOverview from '@/Components/ExpOverview';
 import ExpTable from '@/Components/ExpTable';
 import IconLink from '@/Components/IconLink';
+import ModalBalance from '@/Components/ModalBalance';
 
 import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
+
 
 export default function Dashboard() {
   const categories = [
@@ -34,7 +36,7 @@ export default function Dashboard() {
               <section className='col-span-2'>
                 <div className='flex items-center justify-between mr-2'>
                   <h1 className='boxLabel '> Your Balance</h1>
-                  <IconLink href={route('Expenses')} icon={FaEdit} className="text-subheading"/>
+                  <ModalBalance/>
                 </div>
                   
                 <p className='currency text-green'> IDR 500.000,00</p>

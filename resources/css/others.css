@@ -1,0 +1,43 @@
+/* Modal.css */
+h2 {
+  @apply text-lg font-GRegular text-paleBlack;
+}
+
+.rad {
+  @apply flex gap-3 justify-center items-center font-GRegular
+}
+.inputLabel {
+  @apply text-xl font-GMedium text-allBlack;
+
+}
+
+.tipLabel {
+  @apply text-xs font-GRegular text-paleBlack;
+}
+
+.modal-overlay {
+  @apply flex justify-center items-center size-full
+  backdrop-blur-sm;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(41, 55, 92, 0.701);
+}
+
+.modal-content {
+  @apply bg-allWhite  text-allBlack rounded-xl p-10
+  w-1/2
+  ;
+  
+  
+  
+}
+
+.modal-close {
+  /* conver the css into tailwind */
+  @apply text-4xl text-allBlack block justify-end  
+}
+
+.modal-close:hover {
+  @apply text-alert cursor-pointer;
+}
