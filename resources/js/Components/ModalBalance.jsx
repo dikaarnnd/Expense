@@ -25,19 +25,28 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 // Example component to demonstrate usage of Modal
-export default function ModalBalance() {
+export default function ModalBalance({setBalance}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [period, setPeriod] = useState('monthly'); // Add state for period
+    const [balance, setYourBalance] = useState("");
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (balance) {
+            setBalance(balance);  // Set the balance in the parent component
+            closeModal();
+        }
+    };
+    
     return (
         <div >
             {/* <button className="confirmBtn" onClick={openModal}>
                 Open Modal
             </button> */}
-            <FaEdit className='hover:cursor-pointer text-darkprimary text-lg rounded-md ' onClick={openModal}/>
+            <FaEdit className='hover:cursor-pointer text-paleBlack text-lg rounded-md' onClick={openModal}/>
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
               
@@ -53,18 +62,22 @@ export default function ModalBalance() {
 
 
                 {/* [-------] Form Balance [------] */}
-                <form className="mt-6 space-y-4 min-h-10">
+                <form className="mt-6 space-y-4 min-h-10" onSubmit={handleSubmit}>
                     <div className="flex justify-between">
                         <div className="flex-col">
-                            <p className="inputLabel">Set balance in IDR</p>
+                            <p className="inputLabel">Set balance</p>
                             <p className="tipLabel">// Set your balance</p>
                         </div>
                         <TextInput
-                            id="name"
-                            name="name"
-                            placeholder="Enter IDR..."
+                            id="balance"
+                            name="balance"
+                            type='number'
+                            placeholder="Type amount of IDR..."
                             className="w-2/3"
-                            autoComplete="name"
+                            autoComplete="off"
+                            value={balance} // Controlled input
+                            onChange={(e) => setYourBalance(e.target.value)}
+                            
                             required
                         />
                     </div>
@@ -78,7 +91,7 @@ export default function ModalBalance() {
                         <div className="flex space-x-4 p-2 w-2/3 ">
                           <label className='rad'>
                               <input
-
+                                
                                   type="radio"
                                   value="monthly"
                                   checked={period === 'monthly'}

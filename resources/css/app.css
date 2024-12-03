@@ -62,8 +62,9 @@ body {
 
 /* Core layout */
 .forBoxes section {
-  @apply my-auto p-4 bg-allWhite rounded-md border border-allBlack max-h-fit
+  @apply  p-4 bg-allWhite rounded-md border border-allBlack max-h-fit
 }
+
 
 
 
@@ -76,6 +77,10 @@ h1 {
   @apply text-3xl font-GSemibold text-allBlack;
 }
 
+.nodataText {
+  @apply text-subheading  
+  font-GMedium text-sm py-2;
+}
 
 
 .boxLabel {
@@ -84,9 +89,10 @@ h1 {
 }
 
 .currency {
-  font-size: 32px;
+  font-size: 28px;
   @apply font-semibold font-GRegular ;
 }
+
 
 .categoryLabel {
   font-size: 16px;

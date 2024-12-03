@@ -1,7 +1,6 @@
 import NavBar from '@/Components/NavBar';
 import { Head, Link } from '@inertiajs/react';
 
-import ModalBalance from '@/Components/ModalBalance';
 
 export default function Welcome() {
     return (
@@ -12,7 +11,6 @@ export default function Welcome() {
                 <Link href={route('Dashboard')} className="confirmBtn">
                     Dashboard
                 </Link>
-                <ModalBalance />
             </div>
         </>
     );

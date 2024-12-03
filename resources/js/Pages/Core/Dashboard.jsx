@@ -1,5 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
+
 import DrawerLayout from '@/Layouts/DrawerLayout';
 
 import ExpOverview from '@/Components/ExpOverview';
@@ -7,11 +9,39 @@ import ExpTable from '@/Components/ExpTable';
 import IconLink from '@/Components/IconLink';
 import ModalBalance from '@/Components/ModalBalance';
 
+
 import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
 
 
 export default function Dashboard() {
+  const [balance, setBalance] = useState(null);
+  const [expenses, setExpenses] = useState(0);
+  const cashFlow = balance !== null ? balance - expenses : null;
+
+  const formatBalance = (balance) => {
+    if (balance !== null) {
+      // Use Intl.NumberFormat to format the number
+      return new Intl.NumberFormat('id-ID', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(balance);
+    }
+    return '';
+  };
+
+  const formatCurrency = (value) => {
+    if (value !== null) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(value);
+    }
+    return '';
+  };
+
   const categories = [
     { id: 1, name: '🍔 Food', percentage: '40 %', amount: 'IDR 360k', expensesCount: 16 },
     { id: 2, name: '🏠 Housing', percentage: '30 %', amount: 'IDR 200k', expensesCount: 10 },
@@ -23,7 +53,7 @@ export default function Dashboard() {
       <>
         <Head title="Dashboard" />
         <DrawerLayout>
-          <main className="p-6 min-h-svh space-y-2 ">
+          <main className="p-6 min-h-svh space-y-4  ">
             <div className='mb-4 mt-2 flex items-center justify-between'>
               <h1 className="text-2xl ">Spending Smarter, Living Better!</h1>
               <IconLink href={route('History')} icon={FaRegPlusSquare} size='14px' className="p-2 rounded-md border border-paleBlack">
@@ -32,27 +62,47 @@ export default function Dashboard() {
             </div>
 
             {/*Baris pertama 1️⃣ */} 
-            <header className='grid grid-cols-7 gap-4  min-h-32 rounded-lg forBoxes'>
-              <section className='col-span-2'>
-                <div className='flex items-center justify-between mr-2'>
+            <header className='grid grid-cols-7 gap-4    min-h-10 rounded-lg forBoxes'>
+              <section className='col-span-2 '>
+                <div className='flex items-center justify-between mr-2 '>
                   <h1 className='boxLabel '> Your Balance</h1>
-                  <ModalBalance/>
+                  <ModalBalance setBalance={setBalance}/>
                 </div>
                   
-                <p className='currency text-green'> IDR 500.000,00</p>
+                <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
+                  {balance ? (
+                      <>
+                        <span className="text-lg pr-1">IDR </span>{formatCurrency(balance)}
+                      </>
+                    )  : '// No balance has been set'}
+                </p>
               </section>
 
               <section className='col-span-2'>
                 <h1 className='boxLabel'> Total Expenses</h1>
-                <p className='currency text-darkprimary'> IDR 455.000,00</p>
+                <p className={` ${!balance ? 'nodataText' : 'text-darkprimary currency'}`}> 
+                  {balance ? (
+                    <>
+                      <span className="text-lg pr-1">IDR </span>{formatCurrency(expenses)}
+                    </>
+                  )  : '// Please set your balance first'}
+                 
+                </p>
               </section>
 
               <section className='col-span-3 '>
                 <div className='flex justify-between items-center'>
                   <h1 className='boxLabel'> Total cash flow</h1>
-                  <p className='mr-12'> (Your balance - Total expenses) </p>
+                  <p className='mr-12 text-secondary'> (Your balance - Total expenses) </p>
                 </div>
-                <p className='currency text-alert'> IDR 45.000,00</p>
+                <p className={` ${!balance ? 'nodataText' : 'text-secondary currency'}`}> 
+                  {balance ? (
+                    <>
+                      <span className="text-lg pr-1">IDR </span>{formatCurrency(cashFlow)}
+                    </>
+                  )  : '// Please set your balance first'}
+                 
+                </p>
               </section>
 
             </header>
