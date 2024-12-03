@@ -1,9 +1,18 @@
 /* eslint-disable prettier/prettier */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const DateRangeInput = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+
+    useEffect(() => {
+      const currentDate = new Date();
+      const formattedDate = currentDate
+          .toLocaleDateString('en-CA') // 'en-CA' gives the 'yyyy-mm-dd' format
+          .split('/') // Split the date into an array
+          .join('-'); // Join with dashes to ensure the 'yyyy-mm-dd' format
+      setStartDate(formattedDate);
+  }, []);
 
     // Handle changes for start and end date
     const handleStartDateChange = (event) => {
@@ -28,6 +37,7 @@ const DateRangeInput = () => {
                   className='txtInput w-full'
                   value={startDate}
                   onChange={handleStartDateChange}
+                  required
                 />
             </label>
             <label className='text-sm font-GRegular text-paleBlack'>
@@ -37,6 +47,7 @@ const DateRangeInput = () => {
                   className='txtInput w-full'
                   value={endDate}
                   onChange={handleEndDateChange}
+                  required
                 />
             </label>
 

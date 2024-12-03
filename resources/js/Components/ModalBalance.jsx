@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
 
 import '../../css/others.css';
 
 import TextInput from './TextInput';
-import DateRangeInput from './DataRangeInput';
+import DateRangeInput from './DateRangeInput';
 
 const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
@@ -27,16 +27,39 @@ const Modal = ({ isOpen, onClose, children }) => {
 // Example component to demonstrate usage of Modal
 export default function ModalBalance({setBalance}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentDate, setCurrentDate] = useState(new Date());
+
     const [period, setPeriod] = useState('monthly'); // Add state for period
     const [balance, setYourBalance] = useState("");
+    const [lastUpdated, setLastUpdated] = useState(null);
 
-    const openModal = () => setIsModalOpen(true);
+    const openModal = () => {
+        setIsModalOpen(true);
+        setCurrentDate(new Date());
+    };
     const closeModal = () => setIsModalOpen(false);
+
+    useEffect(() => {
+        // Check if the balance needs to be reset
+        if (period === 'monthly' && lastUpdated) {
+            const currentDate = new Date();
+            const lastUpdateDate = new Date(lastUpdated);
+            const oneMonthLater = new Date(lastUpdateDate);
+            oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
+            if (currentDate >= oneMonthLater) {
+                setYourBalance(""); // Reset balance
+                setLastUpdated(null); // Reset last updated date
+                alert("Your balance has been reset as a month has passed!");
+            }
+        }
+    }, [isModalOpen, period, lastUpdated]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (balance) {
             setBalance(balance);  // Set the balance in the parent component
+            setLastUpdated(new Date());
             closeModal();
         }
     };
@@ -53,7 +76,7 @@ export default function ModalBalance({setBalance}) {
                 <div className='flex justify-between items-start'>
                   <div className="min-h-20 mt-2 space-y-2">
                       <h1>Set or edit your balance</h1>
-                      <h2>Balance is needed to track your expenses!</h2>
+                      <h2>Balance helps track expenses.</h2>
                   </div>
                   <div className="flex justify-end">
                     <button className="modal-close" onClick={closeModal}> &times; </button>
@@ -62,7 +85,7 @@ export default function ModalBalance({setBalance}) {
 
 
                 {/* [-------] Form Balance [------] */}
-                <form className="mt-6 space-y-4 min-h-10" onSubmit={handleSubmit}>
+                <form className="mt-4 space-y-4 min-h-10" onSubmit={handleSubmit}>
                     <div className="flex justify-between">
                         <div className="flex-col">
                             <p className="inputLabel">Set balance</p>
@@ -112,7 +135,8 @@ export default function ModalBalance({setBalance}) {
                         </div>
                     </div>
                     {period === 'custom' && <DateRangeInput />}
-                    <div className="flex justify-end">
+                    <div className="flex justify-between items-center">
+                        <p className="text-paleBlack text-sm font-GRegular">Today is  {currentDate.toLocaleDateString()}</p>
                       <button className="confirmBtn ">Set balance</button>
                     </div>
                 </form>

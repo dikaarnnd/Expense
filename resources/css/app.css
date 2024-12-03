@@ -55,7 +55,9 @@ body {
 }
 
 .txtInput {
-  @apply text-allBlack font-GRegular rounded-sm bg-allWhite focus:bg-allWhite border-paleBlack  shadow-sm focus:border-primary focus:ring-primary;
+  @apply text-allWhite focus:text-allBlack font-GRegular rounded-sm 
+  bg-darkprimary focus:bg-allWhite border-paleBlack  
+  shadow-sm focus:border-primary focus:ring-primary;
 }
 
 
