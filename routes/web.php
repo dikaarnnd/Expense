@@ -31,6 +31,12 @@ Route::get('/Expenses', function () {
     return Inertia::render('Core/Expenses');
 })->name('Expenses');
 
+Route::get('/Profile', function () {
+    return Inertia::render('Core/Profile');
+})->name('Profile');
+
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

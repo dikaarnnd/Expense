@@ -2,13 +2,13 @@
 import { Link } from "@inertiajs/react";
 import { useState } from "react";
 
-import { MdDashboard, MdHistory } from "react-icons/md";
-import { IoCashOutline } from "react-icons/io5";
+import { MdOutlineDashboard, MdHistory } from "react-icons/md";
+import { IoCashOutline, IoPersonOutline } from "react-icons/io5";
 
 
 export default function DrawerLayout({ children }) {
     const menuItems = [
-        { label: 'Dashboard', route: route('Dashboard'), icon: MdDashboard },
+        { label: 'Dashboard', route: route('Dashboard'), icon: MdOutlineDashboard },
         { label: 'History', route: route('History'), icon: MdHistory },
         { label: 'Expenses', route: route('Expenses'), icon: IoCashOutline }
     ];
@@ -37,22 +37,37 @@ export default function DrawerLayout({ children }) {
                     aria-label="close sidebar"
                     className="drawer-overlay"
                 ></label>
-                <div className="bg-allWhite  text-allBlack text-base min-h-[70vh] w-52 p-4 border-r-1 border-r-paleBlack border">
-                <h1 className="py-3 font-GSemibold text-primary"> Expensure</h1>
 
-                    <ul className="space-y-7 mt-6">
-                        {menuItems.map((item) => (
-                            <li 
-                                key={item.label} 
-                                className="flex items-center gap-2 "
-                                onClick={() => handleMenuItemClick(item)}
-                            >
-                            <Link href={item.route} className="flex items-center gap-2">
-                                <item.icon className="text-allBlack text-xl" /> {item.label}
-                            </Link>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="bg-allWhite h-svh justify-between flex flex-col text-allBlack text-base font-GRegular  w-52 p-4 border-r-1 border-r-paleBlack border">
+                    
+                    <div>
+                        <h1 className="py-3 font-GSemibold text-primary"> Expensure</h1>
+                        <ul className="space-y-7 mt-6 ">
+                            {menuItems.map((item) => (
+                                <li 
+                                    key={item.label} 
+                                    className="flex items-center gap-2 "
+                                    onClick={() => handleMenuItemClick(item)}
+                                >
+                                <Link href={item.route} className="flex items-center gap-4">
+                                    <item.icon className="text-allBlack text-xl" /> {item.label}
+                                </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    
+
+                            
+                    <div>
+                        <Link href={route('Profile')} className="flex items-center gap-4 my-4">
+                            <IoPersonOutline className="text-allBlack text-xl" /> Profile
+                        </Link>
+
+                    </div>
+                        
+                    
                 </div>
             </div>
         </div>
