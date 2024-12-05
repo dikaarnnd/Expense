@@ -62,7 +62,7 @@ export default function Dashboard() {
             </div>
 
             {/*Baris pertama 1️⃣ */} 
-            <header className='grid grid-cols-7 gap-4    min-h-10 rounded-lg forBoxes'>
+            <header className='grid grid-cols-7 gap-4  min-h-10 rounded-lg forBoxes'>
               <section className='col-span-2 '>
                 <div className='flex items-center justify-between mr-2 '>
                   <h1 className='boxLabel '> Your Balance</h1>
