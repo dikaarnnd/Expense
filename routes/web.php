@@ -31,6 +31,11 @@ Route::get('/Expenses', function () {
     return Inertia::render('Core/Expenses');
 })->name('Expenses');
 
+Route::get('/Expenses/AddExpense', function () {
+    return Inertia::render('Core/AddExpense');
+})->name('AddExpense');
+
+
 Route::get('/Profile', function () {
     return Inertia::render('Core/Profile');
 })->name('Profile');

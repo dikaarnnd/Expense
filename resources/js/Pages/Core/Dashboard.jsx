@@ -56,7 +56,7 @@ export default function Dashboard() {
           <main className="p-6 min-h-svh space-y-4  ">
             <div className='mb-4 mt-2 flex items-center justify-between'>
               <h1 className="text-2xl ">Spending Smarter, Living Better!</h1>
-              <IconLink href={route('History')} icon={FaRegPlusSquare} size='14px' className="p-2 rounded-md border border-paleBlack">
+              <IconLink href={route('AddExpense')} icon={FaRegPlusSquare} size='14px' className="p-2 rounded-md border border-paleBlack">
                 <p>Add expense</p>  
               </IconLink>
             </div>
