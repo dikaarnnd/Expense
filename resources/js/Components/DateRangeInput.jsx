@@ -34,7 +34,7 @@ const DateRangeInput = () => {
                 Start Date:
                 <input
                   type="date"
-                  className='txtInput w-full'
+                  className='dateInput w-full'
                   value={startDate}
                   onChange={handleStartDateChange}
                   required

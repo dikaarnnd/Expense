@@ -54,7 +54,7 @@ body {
   @apply text-allWhite bg-darkprimary font-GRegular px-6 
 }
 
-.txtInput {
+.dateInput {
   @apply text-allWhite focus:text-allBlack font-GRegular rounded-sm 
   bg-darkprimary focus:bg-allWhite border-paleBlack  
   shadow-sm focus:border-primary focus:ring-primary;
