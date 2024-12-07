@@ -34,6 +34,7 @@ body {
 }
 
 
+
 .prevnext {
   @apply text-darkprimary text-sm font-GRegular px-4 py-2
   transition-all duration-300 ease-out;

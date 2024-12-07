@@ -8,7 +8,7 @@ import ExpOverview from '@/Components/ExpOverview';
 import ExpTable from '@/Components/ExpTable';
 import IconLink from '@/Components/IconLink';
 import ModalBalance from '@/Components/ModalBalance';
-
+import ModalCategory from '@/Components/ModalCategory';
 
 import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
@@ -63,6 +63,8 @@ export default function Dashboard() {
 
             {/*Baris pertama 1️⃣ */} 
             <header className='grid grid-cols-7 gap-4  min-h-10 rounded-lg forBoxes'>
+              
+              {/* Balance data (output) 🔻 */}
               <section className='col-span-2 '>
                 <div className='flex items-center justify-between mr-2 '>
                   <h1 className='boxLabel '> Your Balance</h1>
@@ -78,6 +80,7 @@ export default function Dashboard() {
                 </p>
               </section>
 
+               {/* Total Expenses data (output) 🔻 */}        
               <section className='col-span-2'>
                 <h1 className='boxLabel'> Total Expenses</h1>
                 <p className={` ${!balance ? 'nodataText' : 'text-darkprimary currency'}`}> 
@@ -90,6 +93,7 @@ export default function Dashboard() {
                 </p>
               </section>
 
+               {/* Total Cash Flow (output) 🔻 */}    
               <section className='col-span-3 '>
                 <div className='flex justify-between items-center'>
                   <h1 className='boxLabel'> Total cash flow</h1>
@@ -109,16 +113,17 @@ export default function Dashboard() {
 
             {/*Baris kedua 2️⃣*/} 
             <header className='grid grid-cols-3 gap-4 min-h-60 forBoxes'>
+              
               {/* Expenses Overview */}
               <section className='col-span-2'>
                 <ExpOverview/>
               </section>
 
-              {/* Top Categories */}
+              {/* Top Categories 🔻 */}
               <section className='col-span-1'>
                 <div className='flex items-center justify-between mr-2'>
                   <h1 className='boxLabel'> Top Categories</h1>
-                  <IconLink href={route('Expenses')} icon={FaEdit} className="text-subheading"/>
+                  <ModalCategory/>
                 </div>
 
                 {/* Data top categories 👇 🏆*/}

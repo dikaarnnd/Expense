@@ -28,9 +28,6 @@ h2 {
   @apply bg-allWhite  text-allBlack rounded-xl p-10
   w-1/2
   ;
-  
-  
-  
 }
 
 .modal-close {
@@ -41,3 +38,4 @@ h2 {
 .modal-close:hover {
   @apply text-alert cursor-pointer;
 }
+
