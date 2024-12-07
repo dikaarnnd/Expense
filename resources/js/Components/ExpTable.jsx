@@ -2,7 +2,12 @@
 import { useState } from "react";
 
 export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data }) {
-  
+    const [expenses, setExpenses] = useState([]);
+    const addExpense = (expense) => {
+        setExpenses((prevExpenses) => [...prevExpenses, expense]);
+      };
+
+
   // If no data is passed or it's empty, show a message instead of trying to paginate.
   if (!data || data.length === 0) {
       return <div>No data available</div>;
