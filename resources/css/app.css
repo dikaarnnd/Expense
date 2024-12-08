@@ -9,16 +9,25 @@ body {
 }
 
 .confirmBtn {
-  @apply bg-primary text-allWhite py-2 px-4 rounded-md;
-  
+  @apply bg-primary text-allWhite py-2 px-4 rounded-md
+  transition-all duration-300 ease-out;
 }
 
+
 .confirmBtn:hover {
-  @apply bg-darkprimary py-2 px-4 rounded-md
-  transition-all duration-300 ease-out;
-  
+  @apply bg-darkprimary py-2 px-6 rounded-ss-3xl
+ 
 } 
 
+.alertBtn {
+  @apply bg-alert text-allWhite py-2 px-4 rounded-md
+  transition-all duration-300 ease-out;
+}
+
+.alertBtn:hover {
+  @apply bg-red-600 text-allWhite py-2 px-6  rounded-ss-3xl;
+  
+}
 .underlinedLink {
   @apply text-primary font-medium;
 }
@@ -65,7 +74,8 @@ body {
 
 /* Core layout */
 .forBoxes section {
-  @apply  p-4 bg-allWhite rounded-md border border-allBlack max-h-fit
+  @apply  p-4 bg-transparent rounded-md border border-subheading shadow-lg  
+  max-h-fit
 }
 
 
