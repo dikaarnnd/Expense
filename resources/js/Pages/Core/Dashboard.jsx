@@ -80,7 +80,7 @@ export default function Dashboard() {
                 </p>
               </section>
 
-               {/* Total Expenses data (output) 🔻 */}        
+              {/* Total Expenses data (output) 🔻 */}        
               <section className='col-span-2'>
                 <h1 className='boxLabel'> Total Expenses</h1>
                 <p className={` ${!balance ? 'nodataText' : 'text-darkprimary currency'}`}> 
@@ -93,7 +93,7 @@ export default function Dashboard() {
                 </p>
               </section>
 
-               {/* Total Cash Flow (output) 🔻 */}    
+              {/* Total Cash Flow (output) 🔻 */}    
               <section className='col-span-3 '>
                 <div className='flex justify-between items-center'>
                   <h1 className='boxLabel'> Total cash flow</h1>

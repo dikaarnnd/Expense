@@ -23,20 +23,22 @@ ChartJS.register(
 );
 
 const categories = [
-  { id: 1, name: '🍔 Food', percentage: '40 %', amount: 'IDR 360k', expensesCount: 16 },
-  { id: 2, name: '🏠 Housing', percentage: '30 %', amount: 'IDR 200k', expensesCount: 10 },
-  { id: 3, name: '🚗 Transportation', percentage: '10 %', amount: 'IDR 100k', expensesCount: 5 },
-  { id: 4, name: '💪 Health & Fitness', percentage: '15 %', amount: 'IDR 150k', expensesCount: 8 },
-  { id: 5, name: '🎉 Entertainment', percentage: '5 %', amount: 'IDR 50k', expensesCount: 3 }
+  { id: 1, day: 'Monday', amount: 'IDR 100k', expensesCount: 5 },
+  { id: 2, day: 'Tuesday', amount: 'IDR 120k', expensesCount: 6 },
+  { id: 3, day: 'Wednesday', amount: 'IDR 80k', expensesCount: 4 },
+  { id: 4, day: 'Thursday', amount: 'IDR 90k', expensesCount: 5 },
+  { id: 5, day: 'Friday', amount: 'IDR 110k', expensesCount: 7 },
+  { id: 6, day: 'Saturday', amount: 'IDR 150k', expensesCount: 8 },
+  { id: 7, day: 'Sunday', amount: 'IDR 130k', expensesCount: 6 },
 ];
 
 export default function ExpOverview ()  {
     // Extracting the data for the Line chart
     const chartData = {
-        labels: categories.map((category) => category.name), // X-axis labels
+        labels: categories.map((category) => category.day), // X-axis labels
         datasets: [
             {
-                label: 'Expenses (IDR)',
+                label: 'Daily Expenses (IDR)',
                 data: categories.map((category) =>
                     parseInt(category.amount.replace(/[^\d.-]/g, '')),
                 ), // Data values (amount)
@@ -65,5 +67,3 @@ export default function ExpOverview ()  {
         </div>
     );
 };
-
-
