@@ -23,7 +23,7 @@ export default function ExpFilters({ label, options, onSelect, icon: Icon }) {
                 tabIndex="0"
                 role="button"
                 onClick={toggleDropdown}
-                className="flex justify-center items-center gap-2 my-2 rounded-md border border-paleBlack bg-allWhite px-4 py-2 text-allBlack"
+                className="flex justify-center items-center gap-2 my-2 rounded-md  border border-subheading shadow-md  bg-allWhite px-4 py-2 text-allBlack"
             >
                 {Icon && <Icon className='text-paleBlack text-base'/>}
                 {label} : {selectedOption || 'Select an option'}
@@ -31,7 +31,7 @@ export default function ExpFilters({ label, options, onSelect, icon: Icon }) {
             {open && (
                 <ul
                     tabIndex="0"
-                    className="menu dropdown-content max-h-40 overflow-y-scroll block rounded-md border border-paleBlack bg-allWhite font-GRegular text-sm text-allBlack w-80 "
+                    className="menu dropdown-content max-h-40 overflow-y-scroll block rounded-md  border border-subheading shadow-lg  bg-allWhite font-GRegular text-sm text-allBlack w-80 "
                 >
                     {options.map((option) => (
                         <li key={option}>

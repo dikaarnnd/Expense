@@ -56,7 +56,7 @@ export default function Dashboard() {
           <main className="p-6 min-h-svh space-y-4  ">
             <div className='mb-4 mt-2 flex items-center justify-between'>
               <h1 className="text-2xl ">Spending Smarter, Living Better!</h1>
-              <IconLink href={route('AddExpense')} icon={FaRegPlusSquare} size='14px' className="p-2 rounded-md border border-paleBlack">
+              <IconLink href={route('AddExpense')} icon={FaRegPlusSquare} size='14px' className="p-2 px-4 rounded-md border border-subheading shadow-md">
                 <p>Add expense</p>  
               </IconLink>
             </div>
@@ -149,7 +149,7 @@ export default function Dashboard() {
             {/*Baris ketiga 3️⃣*/} 
             <header className='grid min-h-40 forBoxes'>
               <section>
-                <div className='px-4 flex justify-between items-center'>
+                <div className=' flex justify-between items-center'>
                   <h1 className='boxLabel'> Recent Expenses</h1>
                   <IconLink href={route('Expenses')} icon={IoIosArrowForward} reverse={true} size='14px' >
                     <p>Go to expenses</p> 
