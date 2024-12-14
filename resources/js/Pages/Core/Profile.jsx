@@ -129,7 +129,7 @@ const Profile = () => {
 
             <div className="flex justify-end items-center space-x-8 pt-6 ">
               <p className="text-alert text-sm font-GRegular"> Delete account </p>
-              <button className="alertBtn">Save changes</button>
+              <button className="alertBtn">Log out</button>
             </div>
           </main>
 
