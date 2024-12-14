@@ -21,7 +21,7 @@ Route::get('/oldDashboard', function () {
 //  Core operation pages
 Route::get('/Dashboard', function () {
     return Inertia::render('Core/Dashboard');
-})->name('Dashboard');
+})->middleware(['auth', 'verified'])->name('Dashboard');
 
 Route::get('/History', function () {
     return Inertia::render('Core/History');
