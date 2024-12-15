@@ -6,6 +6,7 @@ import { FaEdit} from "react-icons/fa";
 import DrawerLayout from '@/Layouts/DrawerLayout';
 import ModalBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
+import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
 
 const Profile = () => {
   const user = usePage().props.auth.user;
@@ -150,7 +151,8 @@ const Profile = () => {
             </header>
 
             <div className="flex justify-end items-center space-x-8 pt-6 ">
-              <p className="text-alert text-sm font-GRegular"> Delete account </p>
+              {/* <p className="text-alert text-sm font-GRegular"> Delete account </p> */}
+              <DeleteUserForm/>
               <button className="alertBtn" onClick={handleLogout}>Log out</button>
             </div>
           </main>
