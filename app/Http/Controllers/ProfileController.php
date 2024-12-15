@@ -13,6 +13,23 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function index()
+    {
+        // Mendapatkan data user dari session
+        $user = auth()->user();
+        
+        if (!$user) {
+            abort(403, 'User not authenticated');
+        }
+    
+        return Inertia::render('Profile', [
+            'user' => [
+                'name' => $user->name ?? 'Unknown',
+                'email' => $user->email ?? 'Unknown',
+            ],
+        ]);
+    }
+    
     /**
      * Display the user's profile form.
      */

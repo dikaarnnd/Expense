@@ -96,7 +96,7 @@ export default function Login({ status, canResetPassword }) {
                     {/* <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
                     </PrimaryButton> */}
-                    <button className="confirmBtn">Log in</button>
+                    <button className="confirmBtn" disabled={processing}>Log in</button>
                 </div>
             </form>
             <div className="my-4 flex items-end justify-end justify-items-center space-x-4 text-sm text-gray-600">

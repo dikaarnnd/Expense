@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { FaEdit} from "react-icons/fa";
 
@@ -8,6 +8,12 @@ import ModalBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
 
 const Profile = () => {
+  const user = usePage().props.auth.user;
+
+  const handleLogout = () => {
+    router.post(route('logout')); // Melakukan POST ke route logout
+  };
+
   const [balance, setBalance] = useState(null);
   const formatBalance = (balance) => {
     if (balance !== null) {
@@ -32,7 +38,19 @@ const Profile = () => {
     return '';
     
   };
-
+  
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleString('en-EN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        // timeZoneName: 'short'
+    });
+  };
 
   const categories = [
     { id: 1, emoji: "🏠", name: "Housing" },
@@ -62,14 +80,18 @@ const Profile = () => {
                 <section>
                   <div className='p-2 h-28'>
                     <div className='flex items-center space-x-4'>
-                      <h1 className='text-2xl text-allBlack'> Miguel Cyclops </h1>
+                      {/* <h1 className='text-2xl text-allBlack'>DIka</h1> */}
+                      <h1 className='text-2xl text-allBlack'>{user.name}</h1>
                       <FaEdit className='text-allBlack'/>
                     </div>
-                    <p className='text-paleBlack'> miguel88cyc@gmail.com </p>
+                    {/* <p className='text-paleBlack'>yoo</p> */}
+                    <p className='text-paleBlack'>{user.email}</p>
                   </div>
                   <div className='flex justify-between items-center p-2'>
-                    <p className='text-paleBlack'>Last update : 07/12/2024 </p>
-                    <p className='text-subheading'> Created at : 06/12/2024 </p>
+                    {/* <p className='text-paleBlack'>Last update : 121212 </p> */}
+                    <p className='text-paleBlack'>Last update : {formatDate(user.updated_at)} </p>
+                    {/* <p className='text-subheading'> Created at : 121212 </p> */}
+                    <p className='text-subheading'> Created at : {formatDate(user.created_at)} </p>
                   </div>
                 </section>
 
@@ -129,7 +151,7 @@ const Profile = () => {
 
             <div className="flex justify-end items-center space-x-8 pt-6 ">
               <p className="text-alert text-sm font-GRegular"> Delete account </p>
-              <button className="alertBtn">Log out</button>
+              <button className="alertBtn" onClick={handleLogout}>Log out</button>
             </div>
           </main>
 

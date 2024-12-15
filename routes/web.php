@@ -14,42 +14,36 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/oldDashboard', function () {
-    return Inertia::render('oldDashboard');
-})->middleware(['auth', 'verified'])->name('oldDashboard');
+Route::middleware('auth', 'verified')->group(function () {
+    //  Core operation pages
+    Route::get('/Dashboard', function () {
+        return Inertia::render('Core/Dashboard');
+    })->name('Dashboard');
 
-//  Core operation pages
-Route::get('/Dashboard', function () {
-    return Inertia::render('Core/Dashboard');
-})->middleware(['auth', 'verified'])->name('Dashboard');
+    Route::get('/History', function () {
+        return Inertia::render('Core/History');
+    })->name('History');
+    
+    Route::get('/Expenses', function () {
+        return Inertia::render('Core/Expenses');
+    })->name('Expenses');
+    
+    Route::get('/Expenses/AddExpense', function () {
+        return Inertia::render('Core/AddExpense');
+    })->name('AddExpense');
+    
+    Route::get('/Profile', function () {
+        return Inertia::render('Core/Profile');
+    })->name('Profile');
 
-Route::get('/History', function () {
-    return Inertia::render('Core/History');
-})->name('History');
-
-Route::get('/Expenses', function () {
-    return Inertia::render('Core/Expenses');
-})->name('Expenses');
-
-Route::get('/Expenses/AddExpense', function () {
-    return Inertia::render('Core/AddExpense');
-})->name('AddExpense');
-
-
-Route::get('/Profile', function () {
-    return Inertia::render('Core/Profile');
-})->name('Profile');
-
-
-
-
-Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
+// Route::get('/oldDashboard', function () {
+//     return Inertia::render('oldDashboard');
+// })->middleware(['auth', 'verified'])->name('oldDashboard');
 
 require __DIR__.'/auth.php';
