@@ -44,11 +44,11 @@ const Profile = () => {
     const date = new Date(isoDate);
     return date.toLocaleString('en-EN', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
+        // hour: '2-digit',
+        // minute: '2-digit',
+        // second: '2-digit',
         // timeZoneName: 'short'
     });
   };
