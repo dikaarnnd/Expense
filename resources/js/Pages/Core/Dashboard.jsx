@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Head, Link } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import DrawerLayout from '@/Layouts/DrawerLayout';
 
@@ -14,7 +14,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
 
 
-export default function Dashboard() {
+export default function Dashboard({ setBalance: initialSetBalance }) {
   const [balance, setBalance] = useState(null);
   const [expenses, setExpenses] = useState(0);
   const cashFlow = balance !== null ? balance - expenses : null;
@@ -31,12 +31,19 @@ export default function Dashboard() {
     return '';
   };
 
+  // Set nilai awal balance dari props
+  useEffect(() => {
+    if (initialSetBalance !== null && initialSetBalance !== undefined) {
+      setBalance(initialSetBalance);
+    }
+  }, [initialSetBalance]);
+
   const formatCurrency = (value) => {
     if (value !== null) {
       return new Intl.NumberFormat('id-ID', {
         style: 'decimal',
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 2,
       }).format(value);
     }
     return '';
@@ -56,7 +63,6 @@ export default function Dashboard() {
           <main className="p-6 min-h-svh space-y-4  ">
             <div className='mb-4 mt-2 flex items-center justify-between'>
               <h1 className="text-2xl ">Spending Smarter, Living Better!</h1>
-              <h1 className="text-2xl ">pe</h1>
               <IconLink href={route('AddExpense')} icon={FaRegPlusSquare} size='14px' className="p-2 px-4 rounded-md border border-subheading shadow-md">
                 <p>Add expense</p>  
               </IconLink>

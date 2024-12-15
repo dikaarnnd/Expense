@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
+// import { Inertia } from '@inertiajs/inertia';
+
 
 import '../../css/others.css';
 
@@ -30,7 +32,14 @@ export default function ModalBalance({setBalance}) {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const [period, setPeriod] = useState('monthly'); // Add state for period
-    const [balance, setYourBalance] = useState("");
+    // const [balance, setYourBalance] = useState("");
+    const [balance, setYourBalance] = useState({
+        setYourBalance: '',
+        plan_date: 'monthly', // Default monthly
+        start_date: '',
+        end_date: ''
+      });
+    
     const [lastUpdated, setLastUpdated] = useState(null);
 
     const openModal = () => {
@@ -55,12 +64,58 @@ export default function ModalBalance({setBalance}) {
         }
     }, [isModalOpen, period, lastUpdated]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (balance) {
-            setBalance(balance);  // Set the balance in the parent component
-            setLastUpdated(new Date());
-            closeModal();
+        // if (balance) {
+        //     Inertia.post('/balance', balance);
+        //     setBalance(balance);  // Set the balance in the parent component
+        //     setLastUpdated(new Date());
+        //     closeModal();
+        // }
+        if (!balance.setYourBalance || isNaN(balance.setYourBalance)) {
+            alert('Please enter a valid balance.');
+            return;
+        }
+
+        // Validasi untuk periode custom
+        if (period === 'custom') {
+            if (!balance.start_date || !balance.end_date) {
+                alert('Please select both start and end dates.');
+                return;
+            }
+            
+            // Pastikan tanggal dalam format yang benar
+            const formattedStartDate = new Date(balance.start_date).toISOString().split('T')[0]; // Format YYYY-MM-DD
+            const formattedEndDate = new Date(balance.end_date).toISOString().split('T')[0]; // Format YYYY-MM-DD
+
+            // Update nilai dalam state
+            setYourBalance(prev => ({
+                ...prev,
+                start_date: formattedStartDate,
+                end_date: formattedEndDate
+            }));
+        }
+
+        // Kirim data ke backend (misalnya menggunakan Inertia.js)
+        try {
+            const response = await Inertia.post('/balance', {
+                balance: balance.setYourBalance,
+                plan_date: period,
+                start_date: balance.start_date,
+                end_date: balance.end_date
+            });
+
+            if (response.props.success) {
+                // Update balance in parent component
+                setBalance(parseFloat(balance.setYourBalance)); 
+                setLastUpdated(new Date()); // Update last updated date
+                closeModal();
+            } else {
+                alert('Failed to set balance. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error saving balance:', error);
+            alert('An error occurred. Please try again later.');
         }
     };
     
@@ -98,8 +153,8 @@ export default function ModalBalance({setBalance}) {
                             placeholder="Type amount of IDR..."
                             className="w-2/3"
                             autoComplete="off"
-                            value={balance} // Controlled input
-                            onChange={(e) => setYourBalance(e.target.value)}
+                            value={balance.setYourBalance} // Controlled input
+                            onChange={(e) => setYourBalance({ ...balance, setYourBalance: e.target.value })}
                             
                             required
                         />
@@ -137,7 +192,7 @@ export default function ModalBalance({setBalance}) {
                     {period === 'custom' && <DateRangeInput />}
                     <div className="flex justify-between items-center">
                         <p className="text-paleBlack text-sm font-GRegular">Today is  {currentDate.toLocaleDateString()}</p>
-                      <button className="confirmBtn ">Set balance</button>
+                      <button className="confirmBtn">Set balance</button>
                     </div>
                 </form>
             </Modal>
