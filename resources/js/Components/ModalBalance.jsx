@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
-// import { Inertia } from '@inertiajs/inertia';
-
+import { Inertia } from '@inertiajs/inertia';
+import { useForm } from '@inertiajs/react';
 
 import '../../css/others.css';
 
@@ -27,19 +27,14 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 // Example component to demonstrate usage of Modal
-export default function ModalBalance({setBalance}) {
+export default function ModalBalance() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDate, setCurrentDate] = useState(new Date());
-
-    const [period, setPeriod] = useState('monthly'); // Add state for period
-    // const [balance, setYourBalance] = useState("");
-    const [balance, setYourBalance] = useState({
-        setYourBalance: '',
-        plan_date: 'monthly', // Default monthly
-        start_date: '',
-        end_date: ''
-      });
     
+    const [period, setPeriod] = useState(); // Add state for period
+    const [startDate, setStartDate] = useState(''); // Custom period start date
+    const [endDate, setEndDate] = useState(''); // Custom period end date
+    const [balance, setYourBalance] = useState();
     const [lastUpdated, setLastUpdated] = useState(null);
 
     const openModal = () => {
@@ -64,59 +59,23 @@ export default function ModalBalance({setBalance}) {
         }
     }, [isModalOpen, period, lastUpdated]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        // if (balance) {
-        //     Inertia.post('/balance', balance);
-        //     setBalance(balance);  // Set the balance in the parent component
-        //     setLastUpdated(new Date());
-        //     closeModal();
-        // }
-        if (!balance.setYourBalance || isNaN(balance.setYourBalance)) {
-            alert('Please enter a valid balance.');
-            return;
+
+        const data = {
+            setBalance: balance,
+            plan_date: period,
+            start_date: startDate || null,
+            end_date: endDate || null,
         }
+        console.log("Data to be submitted:", data); // Debug log
 
-        // Validasi untuk periode custom
-        if (period === 'custom') {
-            if (!balance.start_date || !balance.end_date) {
-                alert('Please select both start and end dates.');
-                return;
-            }
-            
-            // Pastikan tanggal dalam format yang benar
-            const formattedStartDate = new Date(balance.start_date).toISOString().split('T')[0]; // Format YYYY-MM-DD
-            const formattedEndDate = new Date(balance.end_date).toISOString().split('T')[0]; // Format YYYY-MM-DD
-
-            // Update nilai dalam state
-            setYourBalance(prev => ({
-                ...prev,
-                start_date: formattedStartDate,
-                end_date: formattedEndDate
-            }));
-        }
-
-        // Kirim data ke backend (misalnya menggunakan Inertia.js)
-        try {
-            const response = await Inertia.post('/balance', {
-                balance: balance.setYourBalance,
-                plan_date: period,
-                start_date: balance.start_date,
-                end_date: balance.end_date
-            });
-
-            if (response.props.success) {
-                // Update balance in parent component
-                setBalance(parseFloat(balance.setYourBalance)); 
-                setLastUpdated(new Date()); // Update last updated date
-                closeModal();
-            } else {
-                alert('Failed to set balance. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error saving balance:', error);
-            alert('An error occurred. Please try again later.');
-        }
+        Inertia.post(route('balances.store'), data, {
+            onSuccess: () => {
+                alert("Balance successfully saved!");
+            },
+        });
+        closeModal();
     };
     
     return (
@@ -147,15 +106,16 @@ export default function ModalBalance({setBalance}) {
                             <p className="tipLabel">// Set your balance</p>
                         </div>
                         <TextInput
-                            id="balance"
-                            name="balance"
+                            id="setBalance"
+                            name="setBalance"
                             type='number'
+                            step="0.01"
                             placeholder="Type amount of IDR..."
                             className="w-2/3"
                             autoComplete="off"
-                            value={balance.setYourBalance} // Controlled input
-                            onChange={(e) => setYourBalance({ ...balance, setYourBalance: e.target.value })}
-                            
+                            value={balance} // Controlled input
+                            // onChange={handleChange}
+                            onChange={(e) => setYourBalance(e.target.value)}
                             required
                         />
                     </div>
@@ -169,8 +129,8 @@ export default function ModalBalance({setBalance}) {
                         <div className="flex space-x-4 p-2 w-2/3 ">
                           <label className='rad'>
                               <input
-                                
                                   type="radio"
+                                  name='period'
                                   value="monthly"
                                   checked={period === 'monthly'}
                                   onChange={() => setPeriod('monthly')}
@@ -180,19 +140,32 @@ export default function ModalBalance({setBalance}) {
                           <label className='rad'>
                               <input
                                 type="radio"
+                                name='period'
                                 value="custom"
                                 checked={period === 'custom'}
                                 onChange={() => setPeriod('custom')}
                               />
                               Custom
                           </label>
-                            
                         </div>
                     </div>
-                    {period === 'custom' && <DateRangeInput />}
+
+                    {/* {period === 'custom' && <DateRangeInput />} */}
+                    {period === "custom" && (
+                        <DateRangeInput
+                            onStartDateChange={(date) => {
+                                console.log("Start Date:", date);
+                                setStartDate(date);
+                            }}
+                            onEndDateChange={(date) => {
+                                console.log("End Date:", date);
+                                setEndDate(date);
+                            }}
+                        />
+                    )}
                     <div className="flex justify-between items-center">
                         <p className="text-paleBlack text-sm font-GRegular">Today is  {currentDate.toLocaleDateString()}</p>
-                      <button className="confirmBtn">Set balance</button>
+                      <button className="confirmBtn" type='submit'>Set balance</button>
                     </div>
                 </form>
             </Modal>

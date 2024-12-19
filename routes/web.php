@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 Route::middleware('auth', 'verified')->group(function () {
     //  Core operation pages
-    Route::get('/Dashboard', [DashboardController::class, 'index'])->name('Dashboard');
+    Route::get('/Dashboard', [BalanceController::class, 'index'])->name('Dashboard');
 
     Route::get('/History', function () {
         return Inertia::render('Core/History');
@@ -43,7 +43,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('/balances', [BalanceController::class, 'store']);
+    Route::post('balances', [BalanceController::class, 'store'])->name('balances.store');
+
 });
 
 // Route::get('/oldDashboard', function () {

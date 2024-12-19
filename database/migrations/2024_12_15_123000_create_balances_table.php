@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('balances', function (Blueprint $table) {
             $table->id('balance_id'); // Kolom ID primary key
-            $table->bigInteger('setBalance'); // Kolom setBalance
+            $table->decimal('setBalance', 15, 2)->default(0); // Kolom setBalance
             $table->enum('plan_date', ['monthly', 'custom']); // Kolom plan_date sebagai enum
-            $table->date('start_date'); // Kolom start_date
-            $table->date('end_date'); // Kolom end_date
-            $table->integer('user_id'); // Kolom foreign key untuk id user
+            $table->date('start_date')->nullable(); // Kolom start_date
+            $table->date('end_date')->nullable(); // Kolom end_date
+            $table->unsignedBigInteger('user_id'); // Kolom foreign key untuk id user
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Foreign key constraint
             $table->timestamps(); // Kolom created_at dan updated_at
         });

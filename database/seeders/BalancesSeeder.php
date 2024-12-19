@@ -16,11 +16,11 @@ class BalancesSeeder extends Seeder
     {
         DB::table('balances')->insert([
             [
-                'setBalance' => 3000000, // Jumlah balance
+                'setBalance' => 5000000, // Jumlah balance
                 'plan_date' => 'custom', // Plan date
                 'start_date' => Carbon::now()->startOfMonth(), // Awal bulan ini
                 'end_date' => Carbon::now()->addDays(30), // 30 hari ke depan
-                'user_id' => 5, // ID user
+                'user_id' => 1, // ID user
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

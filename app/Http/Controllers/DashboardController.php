@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
+// Model
 use App\Models\Balance;
 
 class DashboardController extends Controller
@@ -16,13 +17,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $setBalance = Balance::where('user_id', auth()->id())->value('setBalance');
-
-        logger()->info('User setBalance:', ['setBalance' => $setBalance]);
-
-        return Inertia::render('Core/Dashboard', [
-            'setBalance' => $setBalance, // Kirim hanya 'setBalance'
-        ]);
+        //
     }
     /**
      * Show the form for creating a new resource.

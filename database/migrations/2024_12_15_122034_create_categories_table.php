@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
-            $table->timestamps();
+            $table->string('emoji')->charset('utf8mb4')->collation('utf8mb4_unicode_ci');
+            $table->string('name');
         });
     }
 

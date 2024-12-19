@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { useState, useEffect } from 'react';
 
-const DateRangeInput = () => {
+const DateRangeInput = ({ onStartDateChange, onEndDateChange }) => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
 
@@ -16,11 +16,15 @@ const DateRangeInput = () => {
 
     // Handle changes for start and end date
     const handleStartDateChange = (event) => {
-        setStartDate(event.target.value);
+      const value = event.target.value;
+      setStartDate(value);
+      onStartDateChange(value); // Send value to parent
     };
 
     const handleEndDateChange = (event) => {
-        setEndDate(event.target.value);
+      const value = event.target.value;
+      setEndDate(value);
+      onEndDateChange(value); // Send value to parent
     };
 
     return (
@@ -33,30 +37,28 @@ const DateRangeInput = () => {
             <label className='text-sm font-GRegular text-paleBlack'>
                 Start Date:
                 <input
+                  id='balance_start_date'
                   type="date"
                   className='dateInput w-full'
                   value={startDate}
                   onChange={handleStartDateChange}
+                  // onChange={onChange}
                   required
                 />
             </label>
             <label className='text-sm font-GRegular text-paleBlack'>
                 End Date:
                 <input
+                  id="balance_end_date"
                   type="date"
                   className='txtInput w-full'
                   value={endDate}
-                  onChange={handleEndDateChange}
+                  onChange={handleEndDateChange}  
+                  // onChange={onChange}
                   required
                 />
             </label>
-
           </div>
-
-          {/* <div>
-              <p>Start Date: {startDate}</p>
-              <p>End Date: {endDate}</p>
-          </div> */}
         </div>
     );
 };
