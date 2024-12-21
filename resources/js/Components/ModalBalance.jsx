@@ -1,8 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
-import { Inertia } from '@inertiajs/inertia';
-import { useForm } from '@inertiajs/react';
+import { router } from '@inertiajs/react'; // Removed the unused `useForm` and `Inertia` imports
 
 import '../../css/others.css';
 
@@ -14,12 +13,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-          
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {/* <div className="flex justify-end">
-              <button className="modal-close" onClick={onClose}> &times; </button>
-
-            </div> */}
             {children}
           </div>
         </div>
@@ -32,9 +26,9 @@ export default function ModalBalance() {
     const [currentDate, setCurrentDate] = useState(new Date());
     
     const [period, setPeriod] = useState(); // Add state for period
-    const [startDate, setStartDate] = useState(''); // Custom period start date
-    const [endDate, setEndDate] = useState(''); // Custom period end date
-    const [balance, setYourBalance] = useState();
+    const [startDate, setStartDate] = useState(null); // Changed to null as default
+    const [endDate, setEndDate] = useState(null); // Changed to null as default
+    const [balance, setYourBalance] = useState('');
     const [lastUpdated, setLastUpdated] = useState(null);
 
     const openModal = () => {
@@ -44,7 +38,6 @@ export default function ModalBalance() {
     const closeModal = () => setIsModalOpen(false);
 
     useEffect(() => {
-        // Check if the balance needs to be reset
         if (period === 'monthly' && lastUpdated) {
             const currentDate = new Date();
             const lastUpdateDate = new Date(lastUpdated);
@@ -61,32 +54,60 @@ export default function ModalBalance() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
+        // Validate balance
+        if (isNaN(balance) || balance <= 0) {
+            alert("Please enter a valid positive balance.");
+            return;
+        }
+    
         const data = {
             setBalance: balance,
             plan_date: period,
-            start_date: startDate || null,
-            end_date: endDate || null,
+            start_date: startDate,
+            end_date: endDate,
         }
         console.log("Data to be submitted:", data); // Debug log
-
-        Inertia.post(route('balances.store'), data, {
+    
+        router.post(route('balances.store'), data, {
             onSuccess: () => {
                 alert("Balance successfully saved!");
+                closeModal();
             },
+            onError: (errors) => {
+                // Create an array to hold the error messages
+                const errorMessages = [];
+    
+                // Check if there are errors for balance, period, or dates
+                if (errors.setBalance) {
+                    errorMessages.push(`Balance: ${errors.setBalance}`);
+                }
+                if (errors.plan_date) {
+                    errorMessages.push(`Period: ${errors.plan_date}`);
+                }
+                if (errors.start_date) {
+                    errorMessages.push(`Start Date: ${errors.start_date}`);
+                }
+                if (errors.end_date) {
+                    errorMessages.push(`End Date: ${errors.end_date}`);
+                }
+    
+                // If any errors are found, show them
+                if (errorMessages.length > 0) {
+                    alert(errorMessages.join('\n')); // Show detailed errors as a list
+                } else {
+                    alert("An error occurred. Please try again.");
+                }
+            }
         });
-        closeModal();
     };
     
+    
     return (
-        <div >
-            {/* <button className="confirmBtn" onClick={openModal}>
-                Open Modal
-            </button> */}
+        <div>
             <FaEdit className='hover:cursor-pointer text-paleBlack text-lg rounded-md' onClick={openModal}/>
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-              
                 <div className='flex justify-between items-start'>
                   <div className="min-h-20 mt-2 space-y-2">
                       <h1>Set or edit your balance</h1>
@@ -96,7 +117,6 @@ export default function ModalBalance() {
                     <button className="modal-close" onClick={closeModal}> &times; </button>
                   </div>
                 </div>
-
 
                 {/* [-------] Form Balance [------] */}
                 <form className="mt-4 space-y-4 min-h-10" onSubmit={handleSubmit}>
@@ -114,7 +134,6 @@ export default function ModalBalance() {
                             className="w-2/3"
                             autoComplete="off"
                             value={balance} // Controlled input
-                            // onChange={handleChange}
                             onChange={(e) => setYourBalance(e.target.value)}
                             required
                         />
@@ -126,7 +145,7 @@ export default function ModalBalance() {
                             <p className="tipLabel">// Set your balance period</p>
                         </div>
 
-                        <div className="flex space-x-4 p-2 w-2/3 ">
+                        <div className="flex space-x-4 p-2 w-2/3">
                           <label className='rad'>
                               <input
                                   type="radio"
@@ -150,7 +169,6 @@ export default function ModalBalance() {
                         </div>
                     </div>
 
-                    {/* {period === 'custom' && <DateRangeInput />} */}
                     {period === "custom" && (
                         <DateRangeInput
                             onStartDateChange={(date) => {
@@ -163,9 +181,12 @@ export default function ModalBalance() {
                             }}
                         />
                     )}
+
                     <div className="flex justify-between items-center">
-                        <p className="text-paleBlack text-sm font-GRegular">Today is  {currentDate.toLocaleDateString()}</p>
-                      <button className="confirmBtn" type='submit'>Set balance</button>
+                        <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
+                        <button className="confirmBtn" type='submit'>
+                            Set balance
+                        </button>
                     </div>
                 </form>
             </Modal>

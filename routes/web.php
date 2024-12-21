@@ -43,7 +43,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('balances', [BalanceController::class, 'store'])->name('balances.store');
+    Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
+    // Route::resource('/Dashboard', [BalanceController::class, 'store']);
 
 });
 
