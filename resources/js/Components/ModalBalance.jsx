@@ -34,9 +34,22 @@ export default function ModalBalance() {
     const openModal = () => {
         setIsModalOpen(true);
         setCurrentDate(new Date());
+        
     };
     const closeModal = () => setIsModalOpen(false);
 
+    useEffect(() => {
+        if (period === 'monthly') {
+            const currentDate = new Date();
+            const start = currentDate.toISOString().split('T')[0]; // Set start date to current date
+            const end = new Date(currentDate);
+            end.setMonth(end.getMonth() + 1); // Set end date to 1 month later
+            setStartDate(start);
+            setEndDate(end.toISOString().split('T')[0]); // Format end date
+        }
+    }, [period, isModalOpen]); // Re-run effect when modal opens or period changes
+
+    // Reset balance and last updated when a month has passed since last update
     useEffect(() => {
         if (period === 'monthly' && lastUpdated) {
             const currentDate = new Date();
@@ -50,7 +63,7 @@ export default function ModalBalance() {
                 alert("Your balance has been reset as a month has passed!");
             }
         }
-    }, [isModalOpen, period, lastUpdated]);
+    }, [period, lastUpdated]);
 
     const handleSubmit = (e) => {
         e.preventDefault();

@@ -38,18 +38,14 @@ Route::middleware('auth', 'verified')->group(function () {
         return Inertia::render('Core/Profile');
     })->name('Profile');
 
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
-    // Route::resource('/Dashboard', [BalanceController::class, 'store']);
+    Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
+
+    // Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 });
-
-// Route::get('/oldDashboard', function () {
-//     return Inertia::render('oldDashboard');
-// })->middleware(['auth', 'verified'])->name('oldDashboard');
 
 require __DIR__.'/auth.php';

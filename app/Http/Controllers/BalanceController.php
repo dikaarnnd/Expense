@@ -46,7 +46,6 @@ class BalanceController extends Controller
             'plan_date' => 'required|in:monthly,custom',
             'start_date' => 'required_if:plan_date,custom|date',
             'end_date' => 'required_if:plan_date,custom|date|after:start_date',
-            // 'user_id' => 'required|exists:users,id',
         ]);
 
         Balance::create([
