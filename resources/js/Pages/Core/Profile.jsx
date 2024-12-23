@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaEdit} from "react-icons/fa";
 
 import DrawerLayout from '@/Layouts/DrawerLayout';
@@ -8,14 +8,22 @@ import ModalBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
 import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
 
-const Profile = () => {
+const Profile = ({ setBalance: initialSetBalance }) => {
   const user = usePage().props.auth.user;
+  // const balance = usePage().props.auth.balances;
+  const [balance, setBalance] = useState(null);
+
+  // Set nilai awal balance dari props
+  useEffect(() => {
+    if (initialSetBalance !== null && initialSetBalance !== undefined) {
+      setBalance(initialSetBalance);
+    }
+  }, [initialSetBalance]);
 
   const handleLogout = () => {
     router.post(route('logout')); // Melakukan POST ke route logout
   };
 
-  const [balance, setBalance] = useState(null);
   const formatBalance = (balance) => {
     if (balance !== null) {
       // Use Intl.NumberFormat to format the number
@@ -81,17 +89,13 @@ const Profile = () => {
                 <section>
                   <div className='p-2 h-28'>
                     <div className='flex items-center space-x-4'>
-                      {/* <h1 className='text-2xl text-allBlack'>DIka</h1> */}
                       <h1 className='text-2xl text-allBlack'>{user.name}</h1>
                       <FaEdit className='text-allBlack'/>
                     </div>
-                    {/* <p className='text-paleBlack'>yoo</p> */}
                     <p className='text-paleBlack'>{user.email}</p>
                   </div>
                   <div className='flex justify-between items-center p-2'>
-                    {/* <p className='text-paleBlack'>Last update : 121212 </p> */}
                     <p className='text-paleBlack'>Last update : {formatDate(user.updated_at)} </p>
-                    {/* <p className='text-subheading'> Created at : 121212 </p> */}
                     <p className='text-subheading'> Created at : {formatDate(user.created_at)} </p>
                   </div>
                 </section>
@@ -114,9 +118,8 @@ const Profile = () => {
                 <section>
                   <div className='flex items-center justify-between mr-2 '>
                     <h1 className='boxLabel '> Your current balance</h1>
-                    <ModalBalance setBalance={setBalance}/>
+                    {/* <ModalBalance setBalance={setBalance}/> */}
                   </div>
-                    
                   <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                     {balance ? (
                         <>

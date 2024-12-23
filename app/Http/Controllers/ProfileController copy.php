@@ -11,20 +11,22 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
-// Model
-use App\Models\Balance;
-
 class ProfileController extends Controller
 {
     public function index()
     {
-        // Query untuk menampilkan setBalance ke Dashboard
-        $setBalance = Balance::where('user_id', auth()->id())->value('setBalance');
-
-        // logger()->info('User setBalance:', ['setBalance' => $setBalance]);
-
-        return Inertia::render('Core/Profile', [
-            'setBalance' => $setBalance, // Kirim hanya 'setBalance'
+        // Mendapatkan data user dari session
+        $user = auth()->user();
+        
+        if (!$user) {
+            abort(403, 'User not authenticated');
+        }
+    
+        return Inertia::render('Profile', [
+            'user' => [
+                'name' => $user->name ?? 'Unknown',
+                'email' => $user->email ?? 'Unknown',
+            ],
         ]);
     }
     

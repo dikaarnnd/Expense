@@ -31,12 +31,57 @@ export default function ModalBalance() {
     const [balance, setYourBalance] = useState('');
     const [lastUpdated, setLastUpdated] = useState(null);
 
+    // Edit Balance
+    const [isEditing, setIsEditing] = useState(false); // State untuk mode edit
+    const [editId, setEditId] = useState(null); // ID balance yang sedang diupdate
+    const [fetchedBalance, setFetchedBalance] = useState(null);
+
     const openModal = () => {
         setIsModalOpen(true);
         setCurrentDate(new Date());
         
+        if (balance) {
+            // Jika balance diberikan, set modal untuk edit mode
+            setIsEditing(true);
+            setEditId(balance.id);
+            // setYourBalance(balance.setBalance || "");
+            // setPeriod(balance.plan_date || null);
+            // setStartDate(balance.start_date || null);
+            // setEndDate(balance.end_date || null);
+            // setYourBalance(balance.setBalance);
+            // setPeriod(balance.plan_date);
+            // setStartDate(balance.start_date);
+            // setEndDate(balance.end_date);
+        } else {
+            // Jika tidak ada balance, set modal untuk mode add
+            setIsEditing(false);
+            setEditId(null);
+            setYourBalance('');
+            setPeriod('');
+            setStartDate(null);
+            setEndDate(null);
+        }
     };
     const closeModal = () => setIsModalOpen(false);
+
+    useEffect(() => {
+        if (isEditing && editId) {
+            const fetchBalance = async () => {
+                try {
+                    const response = await router.get(route('balances.show', { id: editId }));
+                    const data = response.data;
+                    setFetchedBalance(data); // Simpan data balance
+                    setYourBalance(data.setBalance || ""); // Gunakan data dari server
+                    setPeriod(data.plan_date || null);
+                    setStartDate(data.start_date || null);
+                    setEndDate(data.end_date || null);
+                } catch (error) {
+                    console.error("Error fetching balance data:", error);
+                }
+            };
+            fetchBalance();
+        }
+    }, [isEditing, editId]);
 
     useEffect(() => {
         if (period === 'monthly') {
@@ -80,51 +125,48 @@ export default function ModalBalance() {
             start_date: startDate,
             end_date: endDate,
         }
-        console.log("Data to be submitted:", data); // Debug log
-    
-        router.post(route('balances.store'), data, {
-            onSuccess: () => {
-                alert("Balance successfully saved!");
-                closeModal();
-            },
-            onError: (errors) => {
-                // Create an array to hold the error messages
-                const errorMessages = [];
-    
-                // Check if there are errors for balance, period, or dates
-                if (errors.setBalance) {
-                    errorMessages.push(`Balance: ${errors.setBalance}`);
-                }
-                if (errors.plan_date) {
-                    errorMessages.push(`Period: ${errors.plan_date}`);
-                }
-                if (errors.start_date) {
-                    errorMessages.push(`Start Date: ${errors.start_date}`);
-                }
-                if (errors.end_date) {
-                    errorMessages.push(`End Date: ${errors.end_date}`);
-                }
-    
-                // If any errors are found, show them
-                if (errorMessages.length > 0) {
-                    alert(errorMessages.join('\n')); // Show detailed errors as a list
-                } else {
-                    alert("An error occurred. Please try again.");
-                }
-            }
-        });
+        // console.log("Data to be submitted:", data);
+
+        if (isEditing) {
+            // Update existing balance (PUT request)
+            router.put(route('balances.update', { id: editId }), data, {
+                onSuccess: () => {
+                    alert("Balance successfully updated!");
+                    closeModal();
+                },
+                onError: handleErrors,
+            });
+        } else {
+            // Create new balance (POST request)
+            router.post(route('balances.store'), data, {
+                onSuccess: () => {
+                    alert("Balance successfully saved!");
+                    closeModal();
+                },
+                onError: handleErrors,
+            });
+        }
+    };
+
+    const handleErrors = (errors) => {
+        const errorMessages = [];
+        if (errors.setBalance) errorMessages.push(`Balance: ${errors.setBalance}`);
+        if (errors.plan_date) errorMessages.push(`Period: ${errors.plan_date}`);
+        if (errors.start_date) errorMessages.push(`Start Date: ${errors.start_date}`);
+        if (errors.end_date) errorMessages.push(`End Date: ${errors.end_date}`);
+        alert(errorMessages.length > 0 ? errorMessages.join('\n') : "An error occurred. Please try again.");
     };
     
     
     return (
         <div>
-            <FaEdit className='hover:cursor-pointer text-paleBlack text-lg rounded-md' onClick={openModal}/>
+            <FaEdit className='hover:cursor-pointer text-paleBlack text-lg rounded-md' onClick={() => openModal(1)}/>
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className='flex justify-between items-start'>
                   <div className="min-h-20 mt-2 space-y-2">
-                      <h1>Set or edit your balance</h1>
-                      <h2>Balance helps track expenses.</h2>
+                    <h1>{isEditing ? "Edit your balance" : "Add a new balance"}</h1>
+                    <h2>Balance helps track expenses.</h2>
                   </div>
                   <div className="flex justify-end">
                     <button className="modal-close" onClick={closeModal}> &times; </button>
@@ -198,7 +240,7 @@ export default function ModalBalance() {
                     <div className="flex justify-between items-center">
                         <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
                         <button className="confirmBtn" type='submit'>
-                            Set balance
+                            {isEditing ? "Update balance" : "Set balance"}
                         </button>
                     </div>
                 </form>

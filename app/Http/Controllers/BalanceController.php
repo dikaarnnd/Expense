@@ -79,7 +79,21 @@ class BalanceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $balance = Balance::findOrFail($id);
+
+        $validated = $request->validate([
+            'setBalance' => 'required|numeric|min:0',
+            'plan_date' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $balance->update($validated);
+
+        return response()->json([
+            'message' => 'Balance successfully updated!',
+            'data' => $balance,
+        ], 200);
     }
 
     /**

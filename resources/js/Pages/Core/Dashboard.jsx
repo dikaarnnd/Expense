@@ -8,7 +8,6 @@ import ExpOverview from '@/Components/ExpOverview';
 import ExpTable from '@/Components/ExpTable';
 import IconLink from '@/Components/IconLink';
 import ModalBalance from '@/Components/ModalBalance';
-import ModalDummy from '@/Components/ModalDummy';
 import ModalCategory from '@/Components/ModalCategory';
 
 import { IoIosArrowForward } from "react-icons/io";
@@ -31,6 +30,11 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
     }
     return '';
   };
+
+  // const openModal = (balance) => {
+  //   setSelectedBalance(balance);
+  //   setModalOpen(true);
+  // };
 
   // Set nilai awal balance dari props
   useEffect(() => {
@@ -77,9 +81,7 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
                 <div className='flex items-center justify-between mr-2 '>
                   <h1 className='boxLabel '> Your Balance</h1>
                   <ModalBalance setBalance={setBalance}/>
-                  {/* <ModalDummy setBalance={setBalance}/> */}
                 </div>
-                  
                 <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                   {balance ? (
                       <>
@@ -132,7 +134,7 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
               <section className='col-span-1'>
                 <div className='flex items-center justify-between mr-2'>
                   <h1 className='boxLabel'> Top Categories</h1>
-                  <ModalCategory/>
+                  {/* <ModalCategory/> */}
                 </div>
 
                 {/* Data top categories 👇 🏆*/}
@@ -167,12 +169,7 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
                 <ExpTable maxHeight="max-h-32" itemsPerPage={5}/>
               </section>  
             </header>
-
-          
-              
           </main>
-
-
         </DrawerLayout>
       </>
     );
