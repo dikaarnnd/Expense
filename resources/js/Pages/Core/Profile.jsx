@@ -8,10 +8,11 @@ import ModalBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
 import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
 
-const Profile = ({ setBalance: initialSetBalance, categories = []}) => {
+const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) => {
   const user = usePage().props.auth.user;
   const [balance, setBalance] = useState(null);
-  // const [selectedCategoriesState, setSelectedCategoriesState] = useState(selectedCategories);
+  const [categoryList, setCategoryList] = useState(categories);
+  const [selectedCategoriesState, setSelectedCategoriesState] = useState(userCategories  || []);
 
   // Set nilai awal balance dari props
   useEffect(() => {
@@ -36,22 +37,13 @@ const Profile = ({ setBalance: initialSetBalance, categories = []}) => {
     return '';
   };
 
-  const handleSave = (updatedCategories) => {
-    const selectedIds = updatedCategories
-            .filter((category) => category.isChecked)
-            .map((category) => category.id);
-
-    // Kirim data ke backend menggunakan Inertia
-    router.post(('category.update', { selected_categories: selectedIds }), {
-        onSuccess: () => {
-            alert('Preferences updated successfully!');
-        },
+  const handleSubmit = (selectedCategories) => {
+    router.post(route('category.update'), { categories: selectedCategories }, {
+      onSuccess: () => {
+          setSelectedCategoriesState(selectedCategories);
+      },
     });
   };
-
-  const selectedCategoryNames = categories
-        .filter((category) => selectedCategoriesState.includes(category.id))
-        .map((category) => `${category.emoji} ${category.name}`);
 
   const formatCurrency = (value) => {
     if (value !== null) {
@@ -120,7 +112,7 @@ const Profile = ({ setBalance: initialSetBalance, categories = []}) => {
 
                 <section>
                   <div className='flex items-center justify-between mr-2 '>
-                    <h1 className='boxLabel '> Your current balance</h1>
+                    <h1 className='boxLabel '>Your current balance</h1>
                     {/* <ModalBalance setBalance={setBalance}/> */}
                   </div>
                   <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
@@ -136,25 +128,20 @@ const Profile = ({ setBalance: initialSetBalance, categories = []}) => {
                   <div className='min-h-40 space-y-4'>
                     <div className='flex items-center justify-between mr-2 '>
                       <h1 className='boxLabel'> Your active categories</h1>
-                      {/* <ModalCategory  categories={categories.map((category) => ({
-                            ...category,
-                            isChecked: selectedCategoriesState.includes(category.id),
-                        }))}
-                        onSave={handleSave}
-                      /> */}
-                      <ModalCategory  categories={categories} onSave={handleSave}/>
-                      
+                      <ModalCategory categories={categoryList} onSave={handleSubmit} />
                     </div>
 
                     <div >
                       <ul className='my-2 font-GRegular text-sm text-paleBlack gap-4 grid grid-cols-2 scrollnobar max-h-44'>
-                        {/* {categories.map((category) => (
-                          <li key={category.id}>
-                            <span>{category.emoji}</span> {category.name}
-                          </li> */}
-                          {selectedCategoryNames.map((name, index) => (
-                            <li key={index}>{name}</li>
-                        ))}
+                        {selectedCategoriesState.length > 0 ? (
+                          selectedCategoriesState.map((category) => (
+                              <li key={category.id}>
+                                  <span>{category.emoji}</span> {category.name}
+                              </li>
+                          ))
+                        ) : (
+                            <p>No active categories selected.</p>
+                        )}
                       </ul>
                     </div>
 

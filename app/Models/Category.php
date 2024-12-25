@@ -10,4 +10,11 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['emoji', 'name'];
+
+    // Relation
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_categories', 'user_id', 'category_id');
+    }
+
 }

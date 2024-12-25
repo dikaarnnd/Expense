@@ -45,9 +45,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Relation
     public function balance()
     {
         return $this->hasOne(Balance::class, 'user_id', 'id');
     }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'user_categories');
+    }
+
 
 }

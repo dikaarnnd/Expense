@@ -21,8 +21,11 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     //  Core operation pages
     Route::get('/Dashboard', [BalanceController::class, 'index'])->name('Dashboard');
+    Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
+    Route::put('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
+
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
-    // Route::get('/Profile', [ProfileController::class, 'index'])->name('category.update');
+    Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
 
     Route::get('/History', function () {
         return Inertia::render('Core/History');
@@ -39,9 +42,6 @@ Route::middleware('auth')->group(function () {
     // Route::get('/Profile', function () {
     //     return Inertia::render('Core/Profile');
     // })->name('Profile');
-
-    Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
-    Route::put('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
 
     // Route::get('/Profile', [CategoryController::class, 'index'])->name('Profile');
 

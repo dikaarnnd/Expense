@@ -13,6 +13,8 @@ use Inertia\Response;
 
 // Model
 use App\Models\Balance;
+use App\Models\Category;
+use App\Models\UserCategory;
 
 class ProfileController extends Controller
 {
@@ -20,32 +22,23 @@ class ProfileController extends Controller
     {
         // Query untuk menampilkan setBalance ke Dashboard
         $setBalance = Balance::where('user_id', auth()->id())->value('setBalance');
-
-        // logger()->info('User setBalance:', ['setBalance' => $setBalance]);
-
+        $user = auth()->user();
+        // Ambil kategori yang dipilih user dari tabel user_categories
+        $userCategories = $user->categories()->get();
+        $categories = Category::all()->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'emoji' => $category->emoji,
+                'name' => $category->name,
+                'isChecked' => false, // Default state
+            ];
+        });
         return Inertia::render('Core/Profile', [
             'setBalance' => $setBalance, // Kirim hanya 'setBalance'
-        ]);
-
-        // Ambil semua kategori dari database
-        // $categories = Category::all();
-        // $selectedCategories = auth()->user()->selected_categories;
-
-        $categories = Category::all()->map(function ($category) {
-            $category->isChecked = $category->id <= 10; // Default centang untuk ID 1-10
-            return $category;
-        });
-
-        // Kirim data ke React melalui Inertia
-        return Inertia::render('Core/Profile', [
             'categories' => $categories,
+            'userCategories' => $userCategories,
         ]);
-        // return Inertia::render('Core/Profile', [
-        //     'categories' => $categories, // Kirim data kategori
-        //     'selectedCategories' => $selectedCategories ?? [], // Preferensi kategori (default: array kosong)
-        // ]);
     }
-    
     /**
      * Display the user's profile form.
      */
@@ -76,10 +69,12 @@ class ProfileController extends Controller
     public function updateCategories(Request $request)
     {
         $user = auth()->user();
-        $user->selected_categories = $request->input('selected_categories');
-        $user->save();
+        $categories = $request->input('categories');
 
-        return redirect()->back()->with('success', 'Preferences updated!');
+        // Sync the selected categories with the user
+        $user->categories()->sync(collect($categories)->pluck('id'));
+
+        return redirect()->route('Profile')->with('success', 'Categories successfully saved!');
     }
 
     /**
