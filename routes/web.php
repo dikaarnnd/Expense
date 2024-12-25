@@ -18,10 +18,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware('auth')->group(function () {
     //  Core operation pages
     Route::get('/Dashboard', [BalanceController::class, 'index'])->name('Dashboard');
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
+    // Route::get('/Profile', [ProfileController::class, 'index'])->name('category.update');
 
     Route::get('/History', function () {
         return Inertia::render('Core/History');
@@ -41,6 +42,8 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
     Route::put('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
+
+    // Route::get('/Profile', [CategoryController::class, 'index'])->name('Profile');
 
     // Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

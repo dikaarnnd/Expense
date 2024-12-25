@@ -8,10 +8,10 @@ import ModalBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
 import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
 
-const Profile = ({ setBalance: initialSetBalance }) => {
+const Profile = ({ setBalance: initialSetBalance, categories = []}) => {
   const user = usePage().props.auth.user;
-  // const balance = usePage().props.auth.balances;
   const [balance, setBalance] = useState(null);
+  // const [selectedCategoriesState, setSelectedCategoriesState] = useState(selectedCategories);
 
   // Set nilai awal balance dari props
   useEffect(() => {
@@ -35,6 +35,23 @@ const Profile = ({ setBalance: initialSetBalance }) => {
     }
     return '';
   };
+
+  const handleSave = (updatedCategories) => {
+    const selectedIds = updatedCategories
+            .filter((category) => category.isChecked)
+            .map((category) => category.id);
+
+    // Kirim data ke backend menggunakan Inertia
+    router.post(('category.update', { selected_categories: selectedIds }), {
+        onSuccess: () => {
+            alert('Preferences updated successfully!');
+        },
+    });
+  };
+
+  const selectedCategoryNames = categories
+        .filter((category) => selectedCategoriesState.includes(category.id))
+        .map((category) => `${category.emoji} ${category.name}`);
 
   const formatCurrency = (value) => {
     if (value !== null) {
@@ -60,20 +77,6 @@ const Profile = ({ setBalance: initialSetBalance }) => {
         // timeZoneName: 'short'
     });
   };
-
-  const categories = [
-    { id: 1, emoji: "🏠", name: "Housing" },
-    { id: 2, emoji: "📚", name: "Education" },
-    { id: 3, emoji: "🧳", name: "Travel" },
-    { id: 4, emoji: "🚗", name: "Transportation" },
-    { id: 5, emoji: "📳", name: "Transfer" },
-    { id: 6, emoji: "🧃", name: "Groceries" },
-    { id: 7, emoji: "🍔", name: "Food" },
-    { id: 8, emoji: "🛠️", name: "Repairs" },
-    { id: 9, emoji: "🕹️", name: "Gadgets" },
-    { id: 10, emoji: "🎬", name: "Entertainment" },
-  ]
-  
 
     return (
       <>
@@ -133,16 +136,24 @@ const Profile = ({ setBalance: initialSetBalance }) => {
                   <div className='min-h-40 space-y-4'>
                     <div className='flex items-center justify-between mr-2 '>
                       <h1 className='boxLabel'> Your active categories</h1>
-                      <ModalCategory/>
+                      {/* <ModalCategory  categories={categories.map((category) => ({
+                            ...category,
+                            isChecked: selectedCategoriesState.includes(category.id),
+                        }))}
+                        onSave={handleSave}
+                      /> */}
+                      <ModalCategory  categories={categories} onSave={handleSave}/>
                       
                     </div>
 
                     <div >
                       <ul className='my-2 font-GRegular text-sm text-paleBlack gap-4 grid grid-cols-2 scrollnobar max-h-44'>
-                        {categories.map((category) => (
+                        {/* {categories.map((category) => (
                           <li key={category.id}>
                             <span>{category.emoji}</span> {category.name}
-                          </li>
+                          </li> */}
+                          {selectedCategoryNames.map((name, index) => (
+                            <li key={index}>{name}</li>
                         ))}
                       </ul>
                     </div>

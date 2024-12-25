@@ -26,6 +26,24 @@ class ProfileController extends Controller
         return Inertia::render('Core/Profile', [
             'setBalance' => $setBalance, // Kirim hanya 'setBalance'
         ]);
+
+        // Ambil semua kategori dari database
+        // $categories = Category::all();
+        // $selectedCategories = auth()->user()->selected_categories;
+
+        $categories = Category::all()->map(function ($category) {
+            $category->isChecked = $category->id <= 10; // Default centang untuk ID 1-10
+            return $category;
+        });
+
+        // Kirim data ke React melalui Inertia
+        return Inertia::render('Core/Profile', [
+            'categories' => $categories,
+        ]);
+        // return Inertia::render('Core/Profile', [
+        //     'categories' => $categories, // Kirim data kategori
+        //     'selectedCategories' => $selectedCategories ?? [], // Preferensi kategori (default: array kosong)
+        // ]);
     }
     
     /**
@@ -53,6 +71,15 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit');
+    }
+
+    public function updateCategories(Request $request)
+    {
+        $user = auth()->user();
+        $user->selected_categories = $request->input('selected_categories');
+        $user->save();
+
+        return redirect()->back()->with('success', 'Preferences updated!');
     }
 
     /**

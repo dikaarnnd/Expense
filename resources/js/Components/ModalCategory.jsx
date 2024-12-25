@@ -16,9 +16,15 @@ const Modal = ({ isOpen, onClose, children }) => {
     );
 };
 
-export default function ModalCategory() {
+export default function ModalCategory({ categories = [], onSave }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [balance, setYourBalance] = useState("");
+    const [checkedCategories, setCheckedCategories] = useState(
+        categories.map((category) => ({
+            ...category,
+            isChecked: category.isChecked ?? false, // Gunakan status dari backend
+        }))
+    );
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -27,35 +33,9 @@ export default function ModalCategory() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (balance) {
-            closeModal();
-        }
+        onSave(checkedCategories);
+        closeModal();
     };
-
-    const categories = [
-        { id: 1, emoji: "🏠", name: "Housing" },
-        { id: 2, emoji: "📚", name: "Education" },
-        { id: 3, emoji: "🧳", name: "Travel" },
-        { id: 4, emoji: "🚗", name: "Transportation" },
-        { id: 5, emoji: "📳", name: "Transfer" },
-        { id: 6, emoji: "🧃", name: "Groceries" },
-        { id: 7, emoji: "🍔", name: "Food" },
-        { id: 8, emoji: "🛠️", name: "Repairs" },
-        { id: 9, emoji: "🕹️", name: "Gadgets" },
-        { id: 10, emoji: "🎬", name: "Entertainment" },
-        { id: 11, emoji: "🛍️", name: "Shopping" },
-        { id: 12, emoji: "📑", name: "Subscriptions" },
-        { id: 13, emoji: "💪", name: "Health & Fitness" },
-        { id: 14, emoji: "📱", name: "Phone & Internet" },
-        { id: 15, emoji: "🛒", name: "Online Shop" },
-    ];
-
-    const [checkedCategories, setCheckedCategories] = useState(
-        categories.map((category, index) => ({
-            ...category,
-            isChecked: index < 10, // Check first 10 categories
-        }))
-    );
 
     // Handle checkbox change
     const handleCheckboxChange = (id) => {
@@ -69,8 +49,8 @@ export default function ModalCategory() {
     };
 
     // Separate categories into checked and unchecked
-    const checked = checkedCategories.filter(category => category.isChecked);
-    const unchecked = checkedCategories.filter(category => !category.isChecked);
+    const checked = checkedCategories.filter((category) => category.isChecked);
+    const unchecked = checkedCategories.filter((category) => !category.isChecked);
 
     return (
         <div>
