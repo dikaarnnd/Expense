@@ -55,6 +55,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Category::class, 'user_categories');
     }
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'user_id', 'id');
+    }
 
 
 }

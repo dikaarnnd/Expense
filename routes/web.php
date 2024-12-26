@@ -4,6 +4,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\ExpenseController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
     Route::put('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
 
+    Route::get('/Expenses/AddExpense', [ExpenseController::class, 'index'])->name('AddExpense');
+    Route::post('/Dashboard', [ExpenseController::class, 'store'])->name('add.expense');
+
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
     Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
 
@@ -34,10 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/Expenses', function () {
         return Inertia::render('Core/Expenses');
     })->name('Expenses');
-    
-    Route::get('/Expenses/AddExpense', function () {
-        return Inertia::render('Core/AddExpense');
-    })->name('AddExpense');
     
     // Route::get('/Profile', function () {
     //     return Inertia::render('Core/Profile');

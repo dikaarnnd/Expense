@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id('expense_id');
-            $table->decimal('price', 10, 2);
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->string('description');
-            $table->date('buyDate');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('category_id');
+            $table->decimal('price', 15, 2);
+            $table->date('buyDate');
+            $table->string('notes')->nullable();
+            
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

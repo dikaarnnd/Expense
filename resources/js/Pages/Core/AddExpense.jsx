@@ -1,15 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Head, Link } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import { router } from '@inertiajs/react';
 import DrawerLayout from '@/Layouts/DrawerLayout';
 
 import TextInput from '@/Components/TextInput';
 
-const AddExpense = ({ addExpense }) => {
+export default function AddExpense({ userCategories = [] }) {
   const [selectedDate, setSelectedDate] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
-  const [notes, setNotes] = useState('');
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     const today = new Date();
@@ -25,28 +26,33 @@ const AddExpense = ({ addExpense }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const newExpense = {
-      id: new Date().getTime(), 
-      category,
-      amount: price,
-      date: selectedDate,
-      notes,
+    const expenseData = {
+        price,
+        category_id: category, // Assuming `category` is the ID
+        notes: note,
+        buyDate: selectedDate,
     };
 
-    addExpense(newExpense); 
+    router.post(route('add.expense'), expenseData, {
+        onSuccess: () => {
+            // Reset form
+            setPrice('');
+            setCategory('');
+            setNote('');
+            setSelectedDate(new Date().toISOString().split('T')[0]);
+        },
+        onError: handleErrors,
+    });
+``};
 
-    // Clear the form after submission
-    setPrice('');
-    setCategory('');
-    setNotes('');
-
-  };
-
-  const categories = [
-    '🍔 Food', '🏠 Housing', '🚗 Transportation', '💪 Health & Fitness',
-    '🎬 Entertainment', '📚 Education', '🛍️ Shopping', '📳 Transfer',
-    '🛠️ Repairs', '📱 Phone & Internet',
-  ];
+const handleErrors = (errors) => {
+  const errorMessages = [];
+  if (errors.price) errorMessages.push(`Price: ${errors.price}`);
+  if (errors.category_id) errorMessages.push(`Category: ${errors.category_id}`);
+  if (errors.notes) errorMessages.push(`Notes: ${errors.notes}`);
+  if (errors.buyDate) errorMessages.push(`Buy Date: ${errors.buyDate}`);
+  alert(errorMessages.length > 0 ? errorMessages.join('\n') : "An error occurred. Please try again.");
+};
 
   
   return (
@@ -75,15 +81,17 @@ const AddExpense = ({ addExpense }) => {
                   <p className="tipLabel">// Which category fits the item?</p>
                 </div>
                 <select
-                  id="category" name="category"
+                  id="category"
+                  name="category"
                   className="rounded-sm bg-allWhite border-paleBlack text-allBlack shadow-sm focus:border-primary focus:ring-primary w-2/3"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  {categories.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
-                    </option>
+                  <option value="">Select Category</option>
+                  {userCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                          {category.emoji} {category.name}
+                      </option>
                   ))}
                 </select>
               </div>
@@ -100,27 +108,19 @@ const AddExpense = ({ addExpense }) => {
                 label="Notes" tip="// What was this expense for?"
                 id="notes" name="notes"
                 placeholder="Enter your notes..."
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
               />
               <div className="flex justify-between items-center">
                 <p className="text-paleBlack text-sm font-GRegular"> Today is {new Date().toLocaleDateString()}</p>
                 <button className="confirmBtn ">Submit</button>
               </div>
-              
-                
-              
             </form>
-
-          </main>
-
-          
+          </main>          
         </DrawerLayout>
     </>
   );
-};
-
-export default AddExpense;
+}
 
 const TextArea = ({ label, tip, id, name, ...props }) => (
   <div className="flex justify-between">
