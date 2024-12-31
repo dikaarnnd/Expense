@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 
 export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data }) {
     const [expenses, setExpenses] = useState([]);
@@ -28,6 +28,23 @@ export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data
   // Handle page change
   const handlePageChange = (page) => {
       setCurrentPage(page);
+  };
+
+  const handleDelete = (expenseId) => {
+    // Konfirmasi penghapusan
+    if (window.confirm('Are you sure you want to delete this expense?')) {
+      // Kirim request DELETE menggunakan Inertia.js
+      router.delete(route('delete.expense', { id: expenseId }), {
+        onSuccess: () => {
+          alert('Expense deleted successfully!');
+          // Secara opsional, Anda bisa memuat ulang halaman atau memanipulasi data yang ditampilkan
+        },
+        onError: (error) => {
+          alert('Error occurred while deleting expense');
+          console.error(error);
+        }
+      });
+    }
   };
 
   return (
@@ -60,8 +77,8 @@ export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data
                                     </Link>
                                   </button>
                                   {/* Delete Button */}
-                                  <button className="text-alert hover:text-red-800">
-                                      <i className="fas fa-trash-alt"></i> Delete
+                                  <button onClick={() => handleDelete(item.id)} className="text-alert hover:text-red-800">
+                                    <i className="fas fa-trash-alt"></i> Delete
                                   </button>
                               </td>
                           </tr>

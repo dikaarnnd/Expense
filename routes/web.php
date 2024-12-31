@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/Expenses', [ExpenseController::class, 'storeExpense'])->name('add.expense');
     Route::get('/Expenses/{id}/EditExpense', [ExpenseController::class, 'edit'])->name('EditExpense');
     Route::put('/Expenses/{id}', [ExpenseController::class, 'editExpense'])->name('edit.expense');
+    Route::delete('/Expenses/{id}', [ExpenseController::class, 'deleteExpense'])->name('delete.expense');
 
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
     Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
@@ -37,16 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/History', function () {
         return Inertia::render('Core/History');
     })->name('History');
-    
-    // Route::get('/Expenses', function () {
-    //     return Inertia::render('Core/Expenses');
-    // })->name('Expenses');
-    
-    // Route::get('/Profile', function () {
-    //     return Inertia::render('Core/Profile');
-    // })->name('Profile');
-
-    // Route::get('/Profile', [CategoryController::class, 'index'])->name('Profile');
 
     // Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

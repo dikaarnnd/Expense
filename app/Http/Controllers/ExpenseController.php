@@ -115,8 +115,20 @@ class ExpenseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function deleteExpense(string $id)
     {
-        //
+        // Cari expense berdasarkan ID
+        $expense = Expense::find($id);
+
+        // Periksa apakah expense ditemukan dan milik user yang sedang login
+        if (!$expense || $expense->user_id !== auth()->id()) {
+            return redirect()->route('Expenses')->with('error', 'Expense not found or unauthorized!');
+        }
+
+        // Hapus expense
+        $expense->delete();
+
+        // Redirect ke halaman Expenses dengan pesan sukses
+        return redirect()->route('Expenses')->with('success', 'Expense deleted successfully!');
     }
 }
