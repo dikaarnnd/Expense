@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { useState } from "react";
+import { Link } from "@inertiajs/react";
 
 export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data }) {
     const [expenses, setExpenses] = useState([]);
@@ -35,26 +36,28 @@ export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data
               <table className="min-w-full bg-allWhite">
                   <thead className="bg-allWhite text-left text-darkprimary font-GRegular">
                       <tr>
-                          <th className="px-4 py-2 border">ID</th>
-                          <th className="px-4 py-2 border">Category</th>
-                          <th className="px-4 py-2 border">Amount (IDR)</th>
-                          <th className="px-4 py-2 border">Date & Time</th>
-                          <th className="px-4 py-2 border">Notes</th>
-                          <th className="px-4 py-2 border">Actions</th>
+                          {/* <th className="px-4 py-2 border text-center">ID</th> */}
+                          <th className="px-4 py-2 border text-center">Category</th>
+                          <th className="px-4 py-2 border text-center">Amount (IDR)</th>
+                          <th className="px-4 py-2 border text-center">Date</th>
+                          <th className="px-4 py-2 border text-center">Notes</th>
+                          <th className="px-4 py-2 border text-center">Actions</th>
                       </tr>
                   </thead>
                   <tbody>
                       {currentItems.map((item) => (
                           <tr key={item.id} className="text-paleBlack font-GRegular">
-                              <td className="px-4 py-2 border">{item.id}</td>
-                              <td className="px-4 py-2 border">{item.category}</td>
-                              <td className="px-4 py-2 border">{item.amount}</td>
-                              <td className="px-4 py-2 border">{item.date}</td>
-                              <td className="px-4 py-2 border truncated-notes">{item.notes}</td>
-                              <td className="px-4 py-2 border flex items-center space-x-2">
+                              {/* <td className="px-4 py-2 border text-center">{item.id}</td> */}
+                              <td className="px-4 py-2 border text-center">{item.category}</td>
+                              <td className="px-4 py-2 border text-center">{item.amount}</td>
+                              <td className="px-4 py-2 border text-center">{item.date}</td>
+                              <td className="px-4 py-2 border truncated-notes text-center">{item.notes}</td>
+                              <td className="px-4 py-2 border flex items-center space-x-2 justify-evenly">
                                   {/* Edit Button */}
                                   <button className="text-green">
-                                      <i className="fas fa-edit"></i> Edit
+                                    <Link href={route('EditExpense', { id: item.id })} size='14px'>
+                                        <i className="fas fa-trash-alt">Edit</i>  
+                                    </Link>
                                   </button>
                                   {/* Delete Button */}
                                   <button className="text-alert hover:text-red-800">

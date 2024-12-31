@@ -25,8 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
     Route::put('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
 
-    Route::get('/Expenses/AddExpense', [ExpenseController::class, 'index'])->name('AddExpense');
-    Route::post('/Dashboard', [ExpenseController::class, 'store'])->name('add.expense');
+    Route::get('/Expenses', [ExpenseController::class, 'showExpense'])->name('Expenses');
+    Route::get('/Expenses/AddExpense', [ExpenseController::class, 'addExpense'])->name('AddExpense');
+    Route::post('/Expenses', [ExpenseController::class, 'storeExpense'])->name('add.expense');
+    Route::get('/Expenses/{id}/EditExpense', [ExpenseController::class, 'edit'])->name('EditExpense');
+    Route::put('/Expenses/{id}', [ExpenseController::class, 'editExpense'])->name('edit.expense');
 
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
     Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
@@ -35,9 +38,9 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Core/History');
     })->name('History');
     
-    Route::get('/Expenses', function () {
-        return Inertia::render('Core/Expenses');
-    })->name('Expenses');
+    // Route::get('/Expenses', function () {
+    //     return Inertia::render('Core/Expenses');
+    // })->name('Expenses');
     
     // Route::get('/Profile', function () {
     //     return Inertia::render('Core/Profile');

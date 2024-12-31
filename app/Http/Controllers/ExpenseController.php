@@ -14,14 +14,35 @@ use Illuminate\Support\Facades\Log;
 
 // Model
 use App\Models\UserCategory;
+use App\Models\Category;
 use App\Models\Expense;
 
 class ExpenseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function showExpense(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        // Ambil data expenses berdasarkan user_id
+        $expenses = Expense::where('user_id', $userId)
+            ->join('categories', 'expenses.category_id', '=', 'categories.id')
+            ->select(
+                'expenses.expense_id as id',
+                'categories.name as category',
+                'categories.emoji as emoji',
+                'expenses.price as amount',
+                'expenses.buyDate as date',
+                'expenses.notes'
+            )
+            ->orderBy('expenses.buyDate', 'desc')
+            ->get();
+
+        return Inertia::render('Core/Expenses', [
+            'expenses' => $expenses,
+        ]);
+    }
+
+    public function addExpense()
     {
         $user = auth()->user();
         // Ambil kategori yang dipilih user dari tabel user_categories
@@ -31,18 +52,7 @@ class ExpenseController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function storeExpense(Request $request)
     {
         $expenseData = $request->validate([
             'price' => 'required|numeric',
@@ -63,28 +73,43 @@ class ExpenseController extends Controller
         return redirect()->route('Expenses')->with('success', 'Expense added successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $user = auth()->user();
+        // Ambil data expense berdasarkan ID
+        $expense = Expense::find($id);
+
+        // Ambil data kategori untuk dropdown
+        $userCategories = $user->categories()->get();
+
+        // Mengirim data expense dan kategori ke view
+        return inertia('Core/EditExpense', [
+            'expense' => $expense,
+            'userCategories' => $userCategories,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Method untuk menyimpan perubahan expense
+    public function editExpense(Request $request, $id)
     {
-        //
-    }
+        $expense = Expense::find($id);
+        $validatedData = $request->validate([
+            'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'notes' => 'nullable|string',
+            'buyDate' => 'required|date',
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        $expense->update([
+            'user_id' => auth()->id(),
+            'price' => $validatedData['price'],
+            'category_id' => $validatedData['category_id'], // Mengaitkan dengan kategori
+            'notes' => $validatedData['notes'],
+            'buyDate' => $validatedData['buyDate'],
+        ]);
+
+        // Mengirimkan response ke frontend
+        return redirect()->route('Expenses')->with('success', 'Expense updated successfully!');
     }
 
     /**
