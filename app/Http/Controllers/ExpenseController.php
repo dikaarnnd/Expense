@@ -22,23 +22,35 @@ class ExpenseController extends Controller
     public function showExpense(Request $request)
     {
         $userId = $request->user()->id;
+        $filterCategory = $request->query('category_id', 'All');
+        $categories = Category::select('id', 'name', 'emoji')->get();
 
         // Ambil data expenses berdasarkan user_id
-        $expenses = Expense::where('user_id', $userId)
+        $query = Expense::where('user_id', $userId)
             ->join('categories', 'expenses.category_id', '=', 'categories.id')
             ->select(
                 'expenses.expense_id as id',
+                'categories.id as category_id', // Tambahkan id kategori untuk filter frontend
                 'categories.name as category',
                 'categories.emoji as emoji',
                 'expenses.price as amount',
                 'expenses.buyDate as date',
                 'expenses.notes'
-            )
-            ->orderBy('expenses.buyDate', 'desc')
-            ->get();
+            );
+            // ->orderBy('expenses.buyDate', 'desc')
+            // ->get();
+        
+        //  filter berdasarkan category_id
+        if ($filterCategory !== 'All') {
+            $query->where('categories.id', $filterCategory);
+        }
+
+        $expenses = $query->orderBy('expenses.buyDate', 'desc')->get();
 
         return Inertia::render('Core/Expenses', [
             'expenses' => $expenses,
+            'categories' => $categories, // Kirim kategori
+            'filterCategory' => $filterCategory, // Kirim filter kategori
         ]);
     }
 
@@ -60,7 +72,6 @@ class ExpenseController extends Controller
             'notes' => 'required|string',
             'buyDate' => 'required|date',
         ]);
-        // Log::info('Input data for expense:', $request->all());
     
         $expense = Expense::create([
             'user_id' => auth()->id(),
@@ -70,7 +81,7 @@ class ExpenseController extends Controller
             'buyDate' => $request->buyDate,
         ]);
     
-        return redirect()->route('Expenses')->with('success', 'Expense added successfully!');
+        return redirect()->route('Dashboard')->with('success', 'Expense added successfully!');
     }
 
     public function edit($id)
@@ -89,7 +100,6 @@ class ExpenseController extends Controller
         ]);
     }
 
-    // Method untuk menyimpan perubahan expense
     public function editExpense(Request $request, $id)
     {
         $expense = Expense::find($id);
@@ -103,32 +113,22 @@ class ExpenseController extends Controller
         $expense->update([
             'user_id' => auth()->id(),
             'price' => $validatedData['price'],
-            'category_id' => $validatedData['category_id'], // Mengaitkan dengan kategori
+            'category_id' => $validatedData['category_id'],
             'notes' => $validatedData['notes'],
             'buyDate' => $validatedData['buyDate'],
         ]);
 
-        // Mengirimkan response ke frontend
         return redirect()->route('Expenses')->with('success', 'Expense updated successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function deleteExpense(string $id)
     {
         // Cari expense berdasarkan ID
         $expense = Expense::find($id);
 
-        // Periksa apakah expense ditemukan dan milik user yang sedang login
-        if (!$expense || $expense->user_id !== auth()->id()) {
-            return redirect()->route('Expenses')->with('error', 'Expense not found or unauthorized!');
-        }
-
         // Hapus expense
         $expense->delete();
 
-        // Redirect ke halaman Expenses dengan pesan sukses
         return redirect()->route('Expenses')->with('success', 'Expense deleted successfully!');
     }
 }

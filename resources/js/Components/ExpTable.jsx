@@ -31,19 +31,18 @@ export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data
   };
 
   const handleDelete = (expenseId) => {
-    // Konfirmasi penghapusan
     if (window.confirm('Are you sure you want to delete this expense?')) {
-      // Kirim request DELETE menggunakan Inertia.js
-      router.delete(route('delete.expense', { id: expenseId }), {
-        onSuccess: () => {
-          alert('Expense deleted successfully!');
-          // Secara opsional, Anda bisa memuat ulang halaman atau memanipulasi data yang ditampilkan
-        },
-        onError: (error) => {
-          alert('Error occurred while deleting expense');
-          console.error(error);
-        }
-      });
+        router.delete(route('delete.expense', { id: expenseId }), {
+            onSuccess: () => {
+                window.location.reload();
+                const updatedData = data.filter(item => item.id !== expenseId);
+                setExpenses(updatedData);
+            },
+            onError: (error) => {
+            alert('Error occurred while deleting expense');
+            console.error(error);
+            }
+        });
     }
   };
 
@@ -65,10 +64,10 @@ export default function ExpTable({ maxHeight, showPagination, itemsPerPage, data
                       {currentItems.map((item) => (
                           <tr key={item.id} className="text-paleBlack font-GRegular">
                               {/* <td className="px-4 py-2 border text-center">{item.id}</td> */}
-                              <td className="px-4 py-2 border text-center">{item.category}</td>
+                              <td className="px-4 py-2 border">{item.category}</td>
                               <td className="px-4 py-2 border text-center">{item.amount}</td>
                               <td className="px-4 py-2 border text-center">{item.date}</td>
-                              <td className="px-4 py-2 border truncated-notes text-center">{item.notes}</td>
+                              <td className="px-4 py-2 border truncated-notes">{item.notes}</td>
                               <td className="px-4 py-2 border flex items-center space-x-2 justify-evenly">
                                   {/* Edit Button */}
                                   <button className="text-green">
