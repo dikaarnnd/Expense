@@ -14,7 +14,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
 
 
-export default function Dashboard({ setBalance: initialSetBalance, expense, totalExpenses, remainingBalance }) {
+export default function Dashboard({ setBalance: initialSetBalance, expense, totalExpenses, remainingBalance, categoriesUsage }) {
   const [balance, setBalance] = useState(null);
   const [expenses, setExpenses] = useState(0);
   const cashFlow = balance !== null ? balance - expenses : null;
@@ -54,18 +54,18 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
     return '';
   };
 
-  const recentExpenses = expense
-  .filter((item) => {
+  const recentExpenses = expense.filter(() => {
     return true;
   })
 
-  const categories = [
-    { id: 1, name: '🍔 Food', percentage: '40 %', amount: 'IDR 360k', expensesCount: 16 },
-    { id: 2, name: '🏠 Housing', percentage: '30 %', amount: 'IDR 200k', expensesCount: 10 },
-    { id: 3, name: '🚗 Transportation', percentage: '10 %', amount: 'IDR 100k', expensesCount: 5 },
-    { id: 4, name: '💪 Health & Fitness', percentage: '15 %', amount: 'IDR 150k', expensesCount: 8 },
-    { id: 5, name: '🎉 Entertainment', percentage: '5 %', amount: 'IDR 50k', expensesCount: 3 }
-  ];
+  const categories = categoriesUsage.map((category) => ({
+    id: category.row_number,
+    name: `${category.emoji} ${category.name}`,
+    percentage: `${((category.total_amount / totalExpenses) * 100).toFixed(1)}%`, // Hitung persentase
+    amount: `IDR ${category.total_amount.toLocaleString('id-ID')}`, // Format mata uang
+    expensesCount: category.expenses_count,
+  }));
+  
     return (
       <>
         <Head title="Dashboard" />

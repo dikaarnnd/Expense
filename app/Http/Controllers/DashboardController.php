@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,11 +42,31 @@ class DashboardController extends Controller
         // Hitung sisa saldo (balance - totalExpenses)
         $remainingBalance = $setBalance - $totalExpenses;
 
+        // Ambil total pengeluaran per kategori
+        $categoriesUsage = Expense::where('expenses.user_id', $userId)
+        ->join('categories', 'expenses.category_id', '=', 'categories.id')
+        ->select(
+            'categories.id as category_id',
+            'categories.name as name',
+            'categories.emoji as emoji',
+            DB::raw('COUNT(expenses.expense_id) as expenses_count'),
+            DB::raw('SUM(expenses.price) as total_amount')
+        )->groupBy('categories.id', 'categories.name', 'categories.emoji')
+        ->orderBy('total_amount', 'desc')
+        ->get()->toArray();
+        
+        // Pengurutan kategori dari nomor 1
+        $categoriesUsage = array_map(function ($category, $index) {
+            $category['row_number'] = $index + 1;
+            return $category;
+        }, $categoriesUsage, array_keys($categoriesUsage));
+
         return Inertia::render('Core/Dashboard', [
-            'setBalance' => $setBalance, // Kirim hanya 'setBalance'
+            'setBalance' => $setBalance,
             'expense' => $expense,
             'totalExpenses' => $totalExpenses,
             'remainingBalance' => $remainingBalance,
+            'categoriesUsage' => $categoriesUsage,
         ]);
     }
     /**
