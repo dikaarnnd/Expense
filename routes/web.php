@@ -21,10 +21,12 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     //  Core operation pages
-    Route::get('/Dashboard', [BalanceController::class, 'index'])->name('Dashboard');
-    Route::post('/Dashboard', [BalanceController::class, 'store'])->name('balances.store');
-    Route::put('/Dashboard', [BalanceController::class, 'store'])->name('balances.update');
+    // Dashboard
+    Route::get('/Dashboard', [DashboardController::class, 'index'])->name('Dashboard');
+    Route::post('/Dashboard', [DashboardController::class, 'store'])->name('balances.store');
+    Route::put('/Dashboard', [DashboardController::class, 'store'])->name('balances.update');
 
+    // Expenses
     Route::get('/Expenses', [ExpenseController::class, 'showExpense'])->name('Expenses');
     Route::get('/Expenses/AddExpense', [ExpenseController::class, 'addExpense'])->name('AddExpense');
     Route::post('/Expenses', [ExpenseController::class, 'storeExpense'])->name('add.expense');
@@ -32,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/Expenses/{id}', [ExpenseController::class, 'editExpense'])->name('edit.expense');
     Route::delete('/Expenses/{id}', [ExpenseController::class, 'deleteExpense'])->name('delete.expense');
 
+    // Profile
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
     Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
 

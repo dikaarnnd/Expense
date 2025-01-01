@@ -90,7 +90,6 @@ export default function Expenses({ expenses, categories, filterCategory }) {
           </div>
           <header className='grid forBoxes '>
               <section>
-                
                 <ExpTable 
                   maxHeight="max-h-72" 
                   showPagination={true} 
@@ -99,7 +98,7 @@ export default function Expenses({ expenses, categories, filterCategory }) {
                     ...item,
                     category: `${item.emoji} ${item.category}` // Sisipkan emoji pada kategori
                   }))}
-                  />
+                />
               </section>  
             </header>
         </div>

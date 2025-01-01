@@ -14,7 +14,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
 
 
-export default function Dashboard({ setBalance: initialSetBalance }) {
+export default function Dashboard({ setBalance: initialSetBalance, expense, totalExpenses, remainingBalance }) {
   const [balance, setBalance] = useState(null);
   const [expenses, setExpenses] = useState(0);
   const cashFlow = balance !== null ? balance - expenses : null;
@@ -53,6 +53,11 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
     }
     return '';
   };
+
+  const recentExpenses = expense
+  .filter((item) => {
+    return true;
+  })
 
   const categories = [
     { id: 1, name: '🍔 Food', percentage: '40 %', amount: 'IDR 360k', expensesCount: 16 },
@@ -97,7 +102,7 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
                 <p className={` ${!balance ? 'nodataText' : 'text-darkprimary currency'}`}> 
                   {balance ? (
                     <>
-                      <span className="text-lg pr-1">IDR </span>{formatCurrency(expenses)}
+                      <span className="text-lg pr-1">IDR </span>{formatCurrency(totalExpenses)}
                     </>
                   )  : '// Please set your balance first'}
                  
@@ -113,7 +118,7 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
                 <p className={` ${!balance ? 'nodataText' : 'text-secondary currency'}`}> 
                   {balance ? (
                     <>
-                      <span className="text-lg pr-1">IDR </span>{formatCurrency(cashFlow)}
+                      <span className="text-lg pr-1">IDR </span>{formatCurrency(remainingBalance)}
                     </>
                   )  : '// Please set your balance first'}
                  
@@ -166,7 +171,16 @@ export default function Dashboard({ setBalance: initialSetBalance }) {
                     <p>Go to expenses</p> 
                   </IconLink>
                 </div>
-                <ExpTable maxHeight="max-h-32" itemsPerPage={5}/>
+                <ExpTable
+                  maxHeight="max-h-72"
+                  showPagination={false}
+                  itemsPerPage={5}
+                  data={recentExpenses.map((item) => ({
+                    ...item,
+                    category: `${item.emoji || ''} ${item.category}`, // Tambahkan emoji jika ada
+                    // date: new Date(item.created_at).toLocaleDateString(), // Format tanggal
+                  }))}
+                />
               </section>  
             </header>
           </main>
