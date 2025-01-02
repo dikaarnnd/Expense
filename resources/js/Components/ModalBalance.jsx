@@ -111,7 +111,7 @@ export default function ModalBalance() {
             // Call API to add new balance
             router.post(route('balances.store'), data, {
                 onSuccess: () => {
-                    // alert('Balance successfully added!');
+                    alert('Balance successfully added!');
                     closeModal();
                 },
                 onError: (errors) => handleErrors(errors),

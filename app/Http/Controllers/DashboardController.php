@@ -88,17 +88,7 @@ class DashboardController extends Controller
             'dailyExpense' => $dailyExpense,
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -118,9 +108,42 @@ class DashboardController extends Controller
         return redirect()->route('Dashboard')->with('success', 'Balance successfully saved!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function update(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'setBalance' => 'required|numeric|min:0',
+            'plan_date' => 'nullable|in:monthly,custom',
+            'start_date' => 'nullable|required_if:plan_date,custom|date',
+            'end_date' => 'nullable|required_if:plan_date,custom|date|after:start_date',
+        ]);
+
+        // Ambil id balance berdasarkan user_id
+        $balanceId = DB::table('balances')
+        ->where('user_id', auth()->id())
+        ->value('balance_id');
+
+        // Jika balanceId ditemukan, lakukan update
+        if ($balanceId) {
+            $updateData = [
+                'setBalance' => $request->input('setBalance'), // Update balance
+            ];
+
+            // Jika plan_date adalah 'custom', tambahkan start_date dan end_date ke update data
+            if ($request->input('plan_date') === 'custom') {
+                $updateData['start_date'] = $request->input('start_date');
+                $updateData['end_date'] = $request->input('end_date');
+            } 
+
+            // Update ke database
+            DB::table('balances')
+                ->where('balance_id', $balanceId)
+                ->update($updateData);
+
+            return redirect()->back()->with('success', 'Balance updated successfully!');
+        }
+    }
+
     public function destroy(string $id)
     {
         //

@@ -23,8 +23,7 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/Dashboard', [DashboardController::class, 'index'])->name('Dashboard');
     Route::post('/Dashboard', [DashboardController::class, 'store'])->name('balances.store');
-    // Route::post('/Dashboard', [DashboardController::class, 'edit'])->name('EditBalance');
-    // Route::put('/Dashboard', [DashboardController::class, 'update'])->name('balances.update');
+    Route::put('/Dashboard', [DashboardController::class, 'update'])->name('balances.update');
 
     // Expenses
     Route::get('/Expenses', [ExpenseController::class, 'showExpense'])->name('Expenses');
