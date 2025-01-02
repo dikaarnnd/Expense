@@ -100,9 +100,9 @@ export default function ModalBalance() {
 
         if (isEditing) {
             // Call API to update balance
-            router.put(route('balances.update', initialSetBalance.id), data, {
+            router.put(route('balances.update', { id: editId }), data, {
                 onSuccess: () => {
-                    // alert('Balance successfully updated!');
+                    alert('Balance successfully updated!');
                     closeModal();
                 },
                 onError: (errors) => handleErrors(errors),
