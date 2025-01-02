@@ -17,6 +17,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 2,
+                'blc_id' => 1,
                 'price' => 12000,
                 'buyDate' => '2024-12-31',
                 'notes' => 'woii'
@@ -24,6 +25,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 3,
+                'blc_id' => 1,
                 'price' => 25000,
                 'buyDate' => '2024-12-31',
                 'notes' => 'Pembelian buku'
@@ -31,6 +33,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 1,
+                'blc_id' => 1,
                 'price' => 50000,
                 'buyDate' => '2024-12-31',
                 'notes' => 'Cemilan sore'
@@ -38,6 +41,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 4,
+                'blc_id' => 1,
                 'price' => 30000,
                 'buyDate' => '2024-12-30',
                 'notes' => 'Transportasi'
@@ -45,6 +49,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 2,
+                'blc_id' => 1,
                 'price' => 15000,
                 'buyDate' => '2024-12-30',
                 'notes' => 'Kopi pagi'
@@ -52,6 +57,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 5,
+                'blc_id' => 1,
                 'price' => 60000,
                 'buyDate' => '2024-12-29',
                 'notes' => 'Hadiah ulang tahun'
@@ -59,6 +65,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 3,
+                'blc_id' => 1,
                 'price' => 45000,
                 'buyDate' => '2024-12-24',
                 'notes' => 'Langganan aplikasi'
@@ -66,6 +73,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 4,
+                'blc_id' => 1,
                 'price' => 10000,
                 'buyDate' => '2024-12-24',
                 'notes' => 'Parkir'
@@ -73,6 +81,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 1,
+                'blc_id' => 1,
                 'price' => 75000,
                 'buyDate' => '2024-12-23',
                 'notes' => 'Belanja mingguan'
@@ -80,6 +89,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 5,
+                'blc_id' => 1,
                 'price' => 120000,
                 'buyDate' => '2024-12-23',
                 'notes' => 'Perbaikan sepeda'
@@ -87,6 +97,7 @@ class ExpensesSeeder extends Seeder
             [
                 'user_id' => 1,
                 'category_id' => 2,
+                'blc_id' => 1,
                 'price' => 20000,
                 'buyDate' => '2024-12-22',
                 'notes' => 'Jajan pasar'

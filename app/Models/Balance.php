@@ -7,24 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Balance extends Model
 {
+    // Relation
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class, 'blc_id', 'id');
+    }
     use HasFactory;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'balances'; // Nama tabel dalam database
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'setBalance',
         'plan_date',

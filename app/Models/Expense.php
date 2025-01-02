@@ -13,6 +13,7 @@ class Expense extends Model
 
     protected $fillable = [
         'user_id',
+        'blc_id',
         'price',
         'category_id',
         'notes',
@@ -23,5 +24,9 @@ class Expense extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function balance()
+    {
+        return $this->belongsTo(Balance::class, 'blc_id', 'id');
     }
 }

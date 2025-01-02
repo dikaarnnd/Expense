@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\UserCategory;
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Balance;
 
 class ExpenseController extends Controller
 {
@@ -37,8 +38,6 @@ class ExpenseController extends Controller
                 'expenses.buyDate as date',
                 'expenses.notes'
             );
-            // ->orderBy('expenses.buyDate', 'desc')
-            // ->get();
         
         //  filter berdasarkan category_id
         if ($filterCategory !== 'All') {
@@ -49,8 +48,8 @@ class ExpenseController extends Controller
 
         return Inertia::render('Core/Expenses', [
             'expenses' => $expenses,
-            'categories' => $categories, // Kirim kategori
-            'filterCategory' => $filterCategory, // Kirim filter kategori
+            'categories' => $categories,
+            'filterCategory' => $filterCategory,
         ]);
     }
 
@@ -66,6 +65,8 @@ class ExpenseController extends Controller
 
     public function storeExpense(Request $request)
     {
+        $balanceId = Balance::where('user_id', auth()->id())->value('balance_id');
+
         $expenseData = $request->validate([
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
@@ -75,8 +76,9 @@ class ExpenseController extends Controller
     
         $expense = Expense::create([
             'user_id' => auth()->id(),
-            'price' => $request->price,
+            'blc_id' => $balanceId,
             'category_id' => $request->category_id,
+            'price' => $request->price,
             'notes' => $request->notes,
             'buyDate' => $request->buyDate,
         ]);

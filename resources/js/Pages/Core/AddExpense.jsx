@@ -28,7 +28,7 @@ export default function AddExpense({ userCategories = [] }) {
 
     const expenseData = {
         price,
-        category_id: category, // Assuming `category` is the ID
+        category_id: category,
         notes: note,
         buyDate: selectedDate,
     };
