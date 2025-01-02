@@ -91,9 +91,23 @@ class DashboardController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function edit(Request $request, $id)
     {
-        //
+        $balance = Balance::findOrFail($id); // Cari balance berdasarkan ID
+
+        // Validasi input
+        $data = $request->validate([
+            'balance' => 'required|numeric|min:0',
+        ]);
+
+        // Isi data balance dengan input terbaru
+        $balance->fill($data);
+
+        // Simpan perubahan
+        $balance->save();
+
+        return Redirect::route('Dashboard', ['id' => $balance->id])
+            ->with('success', 'Balance updated successfully!');
     }
 
     /**
