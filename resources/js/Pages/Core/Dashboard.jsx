@@ -14,7 +14,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
 
 
-export default function Dashboard({ setBalance: initialSetBalance, expense, totalExpenses, remainingBalance, categoriesUsage }) {
+export default function Dashboard({ setBalance: initialSetBalance, expense, totalExpenses, remainingBalance, categoriesUsage, dailyExpense }) {
   const [balance, setBalance] = useState(null);
   const [expenses, setExpenses] = useState(0);
   const cashFlow = balance !== null ? balance - expenses : null;
@@ -30,11 +30,6 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
     }
     return '';
   };
-
-  // const openModal = (balance) => {
-  //   setSelectedBalance(balance);
-  //   setModalOpen(true);
-  // };
 
   // Set nilai awal balance dari props
   useEffect(() => {
@@ -65,6 +60,17 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
     amount: `IDR ${category.total_amount.toLocaleString('id-ID')}`, // Format mata uang
     expensesCount: category.expenses_count,
   }));
+
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  // Format data untuk memastikan semua hari dalam seminggu ada
+  const formattedCategoriesData = daysOfWeek.map((day) => {
+      const dayData = dailyExpense.find((expense) => expense.day === day);
+      return {
+          day,
+          total_expense: dayData ? parseInt(dayData.total_amount) : 0,
+      };
+  });
   
     return (
       <>
@@ -85,7 +91,7 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
               <section className='col-span-2 '>
                 <div className='flex items-center justify-between mr-2 '>
                   <h1 className='boxLabel '> Your Balance</h1>
-                  <ModalBalance setBalance={setBalance}/>
+                  <ModalBalance setBalance={initialSetBalance}/>
                 </div>
                 <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                   {balance ? (
@@ -132,7 +138,7 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
               
               {/* Expenses Overview */}
               <section className='col-span-2'>
-                <ExpOverview/>
+                <ExpOverview data={formattedCategoriesData}/>
               </section>
 
               {/* Top Categories 🔻 */}

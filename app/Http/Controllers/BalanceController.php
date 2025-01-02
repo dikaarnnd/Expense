@@ -39,8 +39,6 @@ class BalanceController extends Controller
      */
     public function store(Request $request)
     {
-        // var_dump($request);
-        // die;
         $data = $request->validate([
             'setBalance' => 'required|numeric',
             'plan_date' => 'required|in:monthly,custom',
@@ -48,13 +46,26 @@ class BalanceController extends Controller
             'end_date' => 'required_if:plan_date,custom|date|after:start_date',
         ]);
 
-        Balance::create([
-            'setBalance' => $request->setBalance,
-            'plan_date' => $request->plan_date,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'user_id' => auth()->id(),
-        ]);
+        $balance = Balance::where('user_id', auth()->id())->first();
+
+        if ($balance) {
+            // Jika balance sudah ada, lakukan update
+            $balance->update([
+                'setBalance' => $request->setBalance,
+                'plan_date' => $request->plan_date,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
+        } else {
+            // Jika balance belum ada, buat baru
+            Balance::create([
+                'setBalance' => $request->setBalance,
+                'plan_date' => $request->plan_date,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'user_id' => auth()->id(),
+            ]);
+        }
         return redirect()->route('Dashboard')->with('success', 'Balance successfully saved!');
     }
 

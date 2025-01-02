@@ -3,7 +3,6 @@
 // Controller
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\BalanceController;
 use App\Http\Controllers\ExpenseController;
 
 use Illuminate\Foundation\Application;
@@ -24,7 +23,8 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/Dashboard', [DashboardController::class, 'index'])->name('Dashboard');
     Route::post('/Dashboard', [DashboardController::class, 'store'])->name('balances.store');
-    Route::put('/Dashboard', [DashboardController::class, 'store'])->name('balances.update');
+    // Route::post('/Dashboard/{id}', [DashboardController::class, 'edit'])->name('editBalance');
+    Route::put('/Dashboard/{id}', [DashboardController::class, 'update'])->name('balances.update');
 
     // Expenses
     Route::get('/Expenses', [ExpenseController::class, 'showExpense'])->name('Expenses');
@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     // Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 });
 

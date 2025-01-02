@@ -21,7 +21,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 // Example component to demonstrate usage of Modal
-export default function ModalBalance() {
+export default function ModalBalance({ initialSetBalance }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDate, setCurrentDate] = useState(new Date());
     
@@ -40,18 +40,10 @@ export default function ModalBalance() {
         setIsModalOpen(true);
         setCurrentDate(new Date());
         
-        if (balance) {
+        if (initialSetBalance) {
             // Jika balance diberikan, set modal untuk edit mode
             setIsEditing(true);
             setEditId(balance.id);
-            // setYourBalance(balance.setBalance || "");
-            // setPeriod(balance.plan_date || null);
-            // setStartDate(balance.start_date || null);
-            // setEndDate(balance.end_date || null);
-            // setYourBalance(balance.setBalance);
-            // setPeriod(balance.plan_date);
-            // setStartDate(balance.start_date);
-            // setEndDate(balance.end_date);
         } else {
             // Jika tidak ada balance, set modal untuk mode add
             setIsEditing(false);
@@ -64,24 +56,24 @@ export default function ModalBalance() {
     };
     const closeModal = () => setIsModalOpen(false);
 
-    useEffect(() => {
-        if (isEditing && editId) {
-            const fetchBalance = async () => {
-                try {
-                    const response = await router.get(route('balances.show', { id: editId }));
-                    const data = response.data;
-                    setFetchedBalance(data); // Simpan data balance
-                    setYourBalance(data.setBalance || ""); // Gunakan data dari server
-                    setPeriod(data.plan_date || null);
-                    setStartDate(data.start_date || null);
-                    setEndDate(data.end_date || null);
-                } catch (error) {
-                    console.error("Error fetching balance data:", error);
-                }
-            };
-            fetchBalance();
-        }
-    }, [isEditing, editId]);
+    // useEffect(() => {
+    //     if (isEditing && editId) {
+    //         const fetchBalance = async () => {
+    //             try {
+    //                 const response = await router.get(route('balances.show', { id: editId }));
+    //                 const data = response.data;
+    //                 setFetchedBalance(data); // Simpan data balance
+    //                 setYourBalance(data.setBalance || ""); // Gunakan data dari server
+    //                 setPeriod(data.plan_date || null);
+    //                 setStartDate(data.start_date || null);
+    //                 setEndDate(data.end_date || null);
+    //             } catch (error) {
+    //                 console.error("Error fetching balance data:", error);
+    //             }
+    //         };
+    //         fetchBalance();
+    //     }
+    // }, [isEditing, editId]);
 
     useEffect(() => {
         if (period === 'monthly') {
@@ -128,22 +120,24 @@ export default function ModalBalance() {
         // console.log("Data to be submitted:", data);
 
         if (isEditing) {
-            // Update existing balance (PUT request)
+            // Call API to update balance
             router.put(route('balances.update', { id: editId }), data, {
                 onSuccess: () => {
-                    alert("Balance successfully updated!");
+                    alert('Balance successfully updated!');
+                    setBalance(yourBalance); // Update the balance in parent component
                     closeModal();
                 },
-                onError: handleErrors,
+                onError: (errors) => handleErrors(errors),
             });
         } else {
-            // Create new balance (POST request)
+            // Call API to add new balance
             router.post(route('balances.store'), data, {
                 onSuccess: () => {
-                    alert("Balance successfully saved!");
+                    alert('Balance successfully added!');
+                    setBalance(yourBalance); // Update the balance in parent component
                     closeModal();
                 },
-                onError: handleErrors,
+                onError: (errors) => handleErrors(errors),
             });
         }
     };

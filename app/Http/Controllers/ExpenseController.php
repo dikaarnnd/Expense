@@ -129,6 +129,6 @@ class ExpenseController extends Controller
         // Hapus expense
         $expense->delete();
 
-        return redirect()->route('Expenses')->with('success', 'Expense deleted successfully!');
+        return redirect()->route('Dashboard')->with('success', 'Expense deleted successfully!');
     }
 }

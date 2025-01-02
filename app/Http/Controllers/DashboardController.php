@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use Carbon\Carbon;
 
 // Model
 use App\Models\Balance;
@@ -21,7 +22,7 @@ class DashboardController extends Controller
     {
         $setBalance = Balance::where('user_id', auth()->id())->value('setBalance');
         
-        // Ambil data expenses berdasarkan user_id
+        // Recent Expense
         $userId = $request->user()->id;
         $query = Expense::where('user_id', $userId)
             ->join('categories', 'expenses.category_id', '=', 'categories.id')
@@ -34,15 +35,18 @@ class DashboardController extends Controller
                 'expenses.buyDate as date',
                 'expenses.notes'
             );
-        $expense = $query->orderBy('expenses.expense_id', 'desc')->take(5)->get();
+        $expense = $query
+        ->orderBy('expenses.buyDate', 'desc')
+        ->orderBy('expenses.expense_id', 'desc')
+        ->take(5)->get();
 
-        // Hitung total semua expenses untuk user tertentu
+        // Total Expense
         $totalExpenses = Expense::where('user_id', $userId)->sum('price');
 
-        // Hitung sisa saldo (balance - totalExpenses)
+        // Total Cash Flow
         $remainingBalance = $setBalance - $totalExpenses;
 
-        // Ambil total pengeluaran per kategori
+        // Top Categories
         $categoriesUsage = Expense::where('expenses.user_id', $userId)
         ->join('categories', 'expenses.category_id', '=', 'categories.id')
         ->select(
@@ -61,12 +65,27 @@ class DashboardController extends Controller
             return $category;
         }, $categoriesUsage, array_keys($categoriesUsage));
 
+        // Chart
+        $dailyExpense = Expense::where('expenses.user_id', $userId)
+        ->join('categories', 'expenses.category_id', '=', 'categories.id')
+        ->whereBetween('expenses.buyDate', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+        ->select(
+            DB::raw('DATE_FORMAT(expenses.buyDate, "%W") as day'), // Konversi tanggal ke hari
+            DB::raw('SUM(expenses.price) as total_amount'),
+            DB::raw('COUNT(expenses.expense_id) as expenses_count')
+        )
+        ->groupBy('day')
+        ->orderByRaw("FIELD(day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')")
+        ->get();
+
+
         return Inertia::render('Core/Dashboard', [
             'setBalance' => $setBalance,
             'expense' => $expense,
             'totalExpenses' => $totalExpenses,
             'remainingBalance' => $remainingBalance,
             'categoriesUsage' => $categoriesUsage,
+            'dailyExpense' => $dailyExpense,
         ]);
     }
     /**
@@ -97,44 +116,6 @@ class DashboardController extends Controller
             'user_id' => auth()->id(),
         ]);
         return redirect()->route('Dashboard')->with('success', 'Balance successfully saved!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $balance = Balance::findOrFail($id);
-
-        $validated = $request->validate([
-            'setBalance' => 'required|numeric|min:0',
-            'plan_date' => 'nullable|string',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date|after_or_equal:start_date',
-        ]);
-
-        $balance->update($validated);
-
-        return response()->json([
-            'message' => 'Balance successfully updated!',
-            'data' => $balance,
-        ], 200);
     }
 
     /**
