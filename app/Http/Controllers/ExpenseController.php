@@ -31,7 +31,7 @@ class ExpenseController extends Controller
             ->join('categories', 'expenses.category_id', '=', 'categories.id')
             ->select(
                 'expenses.expense_id as id',
-                'categories.id as category_id', // Tambahkan id kategori untuk filter frontend
+                'categories.id as category_id',
                 'categories.name as category',
                 'categories.emoji as emoji',
                 'expenses.price as amount',
@@ -39,7 +39,7 @@ class ExpenseController extends Controller
                 'expenses.notes'
             );
         
-        //  filter berdasarkan category_id
+        //  Filter berdasarkan category_id
         if ($filterCategory !== 'All') {
             $query->where('categories.id', $filterCategory);
         }
@@ -70,7 +70,7 @@ class ExpenseController extends Controller
         $expenseData = $request->validate([
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
-            'notes' => 'required|string',
+            'notes' => 'nullable|string',
             'buyDate' => 'required|date',
         ]);
     

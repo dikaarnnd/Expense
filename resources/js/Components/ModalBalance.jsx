@@ -105,7 +105,6 @@ export default function ModalBalance({ initialSetBalance }) {
             router.put(route('balances.update', { id: editId }), data, {
                 onSuccess: () => {
                     alert('Balance successfully updated!');
-                    initialSetBalance(setYourBalance); // Update the balance in parent component
                     closeModal();
                 },
                 onError: (errors) => handleErrors(errors),
@@ -115,7 +114,6 @@ export default function ModalBalance({ initialSetBalance }) {
             router.post(route('balances.store'), data, {
                 onSuccess: () => {
                     // alert('Balance successfully added!');
-                    initialSetBalance(setYourBalance); // Update the balance in parent component
                     closeModal();
                 },
                 onError: (errors) => handleErrors(errors),

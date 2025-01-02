@@ -34,7 +34,7 @@ class ProfileController extends Controller
             ];
         });
         return Inertia::render('Core/Profile', [
-            'setBalance' => $setBalance, // Kirim hanya 'setBalance'
+            'setBalance' => $setBalance,
             'categories' => $categories,
             'userCategories' => $userCategories,
         ]);
