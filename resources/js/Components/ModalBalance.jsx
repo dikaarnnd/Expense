@@ -21,7 +21,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 // Example component to demonstrate usage of Modal
-export default function ModalBalance({ initialSetBalance }) {
+export default function ModalBalance() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentDate, setCurrentDate] = useState(new Date());
     
@@ -34,18 +34,17 @@ export default function ModalBalance({ initialSetBalance }) {
     // Edit Balance
     const [isEditing, setIsEditing] = useState(false); // State untuk mode edit
     const [editId, setEditId] = useState(null); // ID balance yang sedang diupdate
-    const [fetchedBalance, setFetchedBalance] = useState(null);
 
     const openModal = () => {
         setIsModalOpen(true);
         setCurrentDate(new Date());
         
-        if (initialSetBalance) {
-            // Jika balance diberikan, set modal untuk edit mode
+        if (balance) {
+            // If balance is set, set modal to edit mode
             setIsEditing(true);
             setEditId(balance.id);
         } else {
-            // Jika tidak ada balance, set modal untuk mode add
+            // Otherwise, set modal to add mode
             setIsEditing(false);
             setEditId(null);
             setYourBalance('');
@@ -97,8 +96,7 @@ export default function ModalBalance({ initialSetBalance }) {
             plan_date: period,
             start_date: startDate,
             end_date: endDate,
-        }
-        // console.log("Data to be submitted:", data);
+        };
 
         if (isEditing) {
             // Call API to update balance
@@ -113,7 +111,7 @@ export default function ModalBalance({ initialSetBalance }) {
             // Call API to add new balance
             router.post(route('balances.store'), data, {
                 onSuccess: () => {
-                    // alert('Balance successfully added!');
+                    alert('Balance successfully added!');
                     closeModal();
                 },
                 onError: (errors) => handleErrors(errors),
@@ -133,7 +131,7 @@ export default function ModalBalance({ initialSetBalance }) {
     
     return (
         <div>
-            <FaEdit className='hover:cursor-pointer text-paleBlack text-lg rounded-md' onClick={() => openModal(1)}/>
+            <FaEdit className='hover:cursor-pointer text-paleBlack text-lg rounded-md' onClick={openModal}/>
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className='flex justify-between items-start'>
@@ -156,7 +154,7 @@ export default function ModalBalance({ initialSetBalance }) {
                         <TextInput
                             id="setBalance"
                             name="setBalance"
-                            type='number'
+                            type="number"
                             step="0.01"
                             placeholder="Type amount of IDR..."
                             className="w-2/3"
