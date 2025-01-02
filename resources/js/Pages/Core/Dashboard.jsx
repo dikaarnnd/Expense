@@ -8,6 +8,7 @@ import ExpOverview from '@/Components/ExpOverview';
 import ExpTable from '@/Components/ExpTable';
 import IconLink from '@/Components/IconLink';
 import ModalBalance from '@/Components/ModalBalance';
+import ModalEditBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
 
 import { IoIosArrowForward } from "react-icons/io";
@@ -90,8 +91,8 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
               {/* Balance data (output) 🔻 */}
               <section className='col-span-2 '>
                 <div className='flex items-center justify-between mr-2 '>
-                  <h1 className='boxLabel '> Your Balance</h1>
-                  <ModalBalance setBalance={initialSetBalance}/>
+                  <h1 className={` ${!balance ? 'boxLabel' : 'boxLabel'}`}> Your Balance</h1>
+                  <ModalBalance/>
                 </div>
                 <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                   {balance ? (

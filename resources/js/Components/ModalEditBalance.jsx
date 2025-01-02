@@ -56,6 +56,25 @@ export default function ModalBalance({ initialSetBalance }) {
     };
     const closeModal = () => setIsModalOpen(false);
 
+    // useEffect(() => {
+    //     if (isEditing && editId) {
+    //         const fetchBalance = async () => {
+    //             try {
+    //                 const response = await router.get(route('balances.show', { id: editId }));
+    //                 const data = response.data;
+    //                 setFetchedBalance(data); // Simpan data balance
+    //                 setYourBalance(data.setBalance || ""); // Gunakan data dari server
+    //                 setPeriod(data.plan_date || null);
+    //                 setStartDate(data.start_date || null);
+    //                 setEndDate(data.end_date || null);
+    //             } catch (error) {
+    //                 console.error("Error fetching balance data:", error);
+    //             }
+    //         };
+    //         fetchBalance();
+    //     }
+    // }, [isEditing, editId]);
+
     useEffect(() => {
         if (period === 'monthly') {
             const currentDate = new Date();
@@ -140,7 +159,7 @@ export default function ModalBalance({ initialSetBalance }) {
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className='flex justify-between items-start'>
                   <div className="min-h-20 mt-2 space-y-2">
-                    <h1>Add a new balance</h1>
+                    <h1>Edit your balance</h1>
                     <h2>Balance helps track expenses.</h2>
                   </div>
                   <div className="flex justify-end">
