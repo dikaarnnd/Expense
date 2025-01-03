@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/Dashboard', [DashboardController::class, 'index'])->name('Dashboard');
     Route::post('/Dashboard', [DashboardController::class, 'store'])->name('balances.store');
     // Route::post('/Dashboard', [DashboardController::class, 'edit'])->name('EditBalance');
-    Route::put('/Dashboard', [DashboardController::class, 'update'])->name('balances.update');
+    // Route::put('/Dashboard', [DashboardController::class, 'update'])->name('balances.update');
 
     // Expenses
     Route::get('/Expenses', [ExpenseController::class, 'showExpense'])->name('Expenses');
@@ -36,7 +36,10 @@ Route::middleware('auth')->group(function () {
 
     // Profile
     Route::get('/Profile', [ProfileController::class, 'index'])->name('Profile');
+    Route::put('/Profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
+    Route::post('/Profile', [ProfileController::class, 'storeBalance'])->name('balances.store');
+    Route::put('/Profile', [ProfileController::class, 'updateBalance'])->name('balances.update');
 
     Route::get('/History', function () {
         return Inertia::render('Core/History');

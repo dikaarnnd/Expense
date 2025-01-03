@@ -3,23 +3,37 @@ import { Head, Link, usePage, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { FaEdit} from "react-icons/fa";
 
+import TextInput from '@/Components/TextInput';
 import DrawerLayout from '@/Layouts/DrawerLayout';
-import ModalBalance from '@/Components/ModalBalance';
 import ModalCategory from '@/Components/ModalCategory';
 import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
 
-const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) => {
+const Profile = ({ setBalance, categories, userCategories }) => {
   const user = usePage().props.auth.user;
-  const [balance, setBalance] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const [balance, setYourBalance] = useState(null);
+  const [period, setPeriod] = useState(); // Add state for period
+  const [startDate, setStartDate] = useState(null); // Changed to null as default
+  const [endDate, setEndDate] = useState(null); // Changed to null as default
+  const [lastUpdated, setLastUpdated] = useState(null);
+
   const [categoryList, setCategoryList] = useState(categories);
   const [selectedCategoriesState, setSelectedCategoriesState] = useState(userCategories  || []);
 
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
+  const [password, setPassword] = useState(user.password);
+
+  const [EditUser, setEditUser] = useState(false);
+  const [EditBalance, setEditBalance] = useState(false);
+
   // Set nilai awal balance dari props
   useEffect(() => {
-    if (initialSetBalance !== null && initialSetBalance !== undefined) {
-      setBalance(initialSetBalance);
+    if (setBalance !== null && setBalance !== undefined) {
+      setYourBalance(setBalance);
     }
-  }, [initialSetBalance]);
+  }, [setBalance]);
 
   const handleLogout = () => {
     router.post(route('logout')); // Melakukan POST ke route logout
@@ -43,6 +57,62 @@ const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) 
           setSelectedCategoriesState(selectedCategories);
       },
     });
+  };
+
+  const handleSave = () => {
+    // Lakukan validasi jika diperlukan
+    if (!name || !email) {
+        alert("Name and email cannot be empty.");
+        return;
+    }
+
+    // Panggil API untuk menyimpan perubahan
+    const data = { name, email, password };
+    router.put(route('profile.update', user.id), data, {
+        onSuccess: () => {
+            alert('Profile updated successfully!');
+            setEditUser(false); // Tutup modal
+        },
+        onError: (errors) => {
+            alert("Failed to update profile. Please try again.");
+            console.error(errors);
+        },
+    });
+  };
+
+  const handleUpdate = () => {
+    // Validate balance
+    if (isNaN(balance) || balance <= 0) {
+        alert("Please enter a valid positive balance.");
+        return;
+    }
+
+    const data = {
+        setBalance: balance,
+        plan_date: period,
+        start_date: startDate,
+        end_date: endDate,
+    };
+
+    if (EditBalance) {
+        // Call API to update balance
+        router.put(route('balances.update'), data, {
+            onSuccess: () => {
+                alert('Balance successfully updated!');
+                setEditBalance(false);
+            },
+            onError: (errors) => handleErrors(errors),
+        });
+    } else {
+        // Call API to add new balance
+        router.post(route('balances.store'), data, {
+            onSuccess: () => {
+                alert('Balance successfully added!');
+                setEditBalance(false);
+            },
+            onError: (errors) => handleErrors(errors),
+        });
+    }
   };
 
   const formatCurrency = (value) => {
@@ -85,7 +155,10 @@ const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) 
                   <div className='p-2 h-28'>
                     <div className='flex items-center space-x-4'>
                       <h1 className='text-2xl text-allBlack'>{user.name}</h1>
-                      <FaEdit className='text-allBlack'/>
+                      <FaEdit
+                        className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
+                        onClick={() => setEditUser(true)}
+                      />
                     </div>
                     <p className='text-paleBlack'>{user.email}</p>
                   </div>
@@ -93,6 +166,72 @@ const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) 
                     <p className='text-paleBlack'>Last update : {formatDate(user.updated_at)} </p>
                     <p className='text-subheading'> Created at : {formatDate(user.created_at)} </p>
                   </div>
+                  {/* Modal untuk mengedit profil */}
+                  {EditUser && (
+                    <div className="modal-overlay" onClick={() => setEditUser(false)}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                          <div className='flex justify-between items-start'>
+                            <div className="min-h-20 mt-2 space-y-2">
+                              <h1>Edit your profile</h1>
+                            </div>
+                          </div>
+                          <form
+                              onSubmit={(e) => {
+                                  e.preventDefault();
+                                  handleSave();
+                              }}
+                          >
+                            <div className="mb-4">
+                              <label className="inputLabel">Name</label>
+                              <TextInput
+                                type="text"
+                                className="w-full p-2 border rounded"
+                                value={name}
+                                autoComplete="off"
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <label className="inputLabel">Email</label>
+                              <TextInput
+                                type="email"
+                                className="w-full p-2 border rounded"
+                                value={email}
+                                // autoComplete="off"
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                              />
+                            </div>
+                            <div className="mb-4">
+                              <label className="inputLabel">Password</label>
+                              <TextInput
+                                type="password"
+                                className="w-full p-2 border rounded"
+                                value={password}
+                                // autoComplete="off"
+                                onChange={(e) => setPassword(e.target.value)}
+                              />
+                            </div>
+                            <div className="flex justify-end space-x-2">
+                                <button
+                                    type="button"
+                                    className="confirmBtn"
+                                    onClick={() => setEditUser(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="confirmBtn"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                          </form>
+                        </div>
+                    </div>
+                  )}
                 </section>
 
                 <div className="space-y-2">
@@ -113,7 +252,10 @@ const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) 
                 <section>
                   <div className='flex items-center justify-between mr-2 '>
                     <h1 className='boxLabel '>Your current balance</h1>
-                    {/* <ModalBalance setBalance={setBalance}/> */}
+                    <FaEdit
+                        className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
+                        onClick={() => setEditBalance(true)}
+                    />
                   </div>
                   <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                     {balance ? (
@@ -122,6 +264,94 @@ const Profile = ({ setBalance: initialSetBalance, categories, userCategories }) 
                         </>
                       )  : '// No balance has been set'}
                   </p>
+                  {EditBalance && (
+                    <div className="modal-overlay" onClick={() => setEditBalance(false)}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                          <div className='flex justify-between items-start'>
+                            <div className="min-h-20 mt-2 space-y-2">
+                              <h1>Edit your balance</h1>
+                              <h2>Balance helps track expenses.</h2>
+                            </div>
+                          </div>
+                          <form
+                              onSubmit={(e) => {
+                                  e.preventDefault();
+                                  handleUpdate();
+                              }}
+                              className='mt-4 space-y-4 min-h-10'
+                          >
+                            <div className="flex justify-between">
+                              <div className="flex-col">
+                                  <p className="inputLabel">Set balance</p>
+                                  <p className="tipLabel">// Set your balance</p>
+                              </div>
+                              <TextInput
+                                  id="setBalance"
+                                  name="setBalance"
+                                  type="number"
+                                  step="0.01"
+                                  placeholder="Type amount of IDR..."
+                                  className="w-2/3"
+                                  autoComplete="off"
+                                  value={balance} // Controlled input
+                                  onChange={(e) => setYourBalance(e.target.value)}
+                                  required
+                              />
+                            </div>
+
+                            <div className="flex justify-between">
+                              <div className="flex-col">
+                                  <p className="inputLabel">Select period</p>
+                                  <p className="tipLabel">// Set your balance period</p>
+                              </div>
+
+                              <div className="flex space-x-4 p-2 w-2/3">
+                                <label className='rad'>
+                                    <input
+                                        type="radio"
+                                        name='period'
+                                        value="monthly"
+                                        checked={period === 'monthly'}
+                                        onChange={() => setPeriod('monthly')}
+                                    />
+                                    Monthly
+                                </label>
+                                <label className='rad'>
+                                    <input
+                                      type="radio"
+                                      name='period'
+                                      value="custom"
+                                      checked={period === 'custom'}
+                                      onChange={() => setPeriod('custom')}
+                                    />
+                                    Custom
+                                </label>
+                              </div>
+                          </div>
+
+                          {period === "custom" && (
+                              <DateRangeInput
+                                  onStartDateChange={(date) => {
+                                      console.log("Start Date:", date);
+                                      setStartDate(date);
+                                  }}
+                                  onEndDateChange={(date) => {
+                                      console.log("End Date:", date);
+                                      setEndDate(date);
+                                  }}
+                              />
+                          )}
+
+                          <div className="flex justify-between items-center">
+                              <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
+                              <button className="confirmBtn" type='submit'>
+                                  {EditBalance ? "Update balance" : "Set balance"}
+                              </button>
+                          </div>
+                          </form>
+                        </div>
+                    </div>
+                  )}
                 </section>
 
                 <section>
