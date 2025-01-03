@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
 import {
     Chart as ChartJS,
@@ -26,20 +25,9 @@ ChartJS.register(
     ArcElement // This is required for Pie chart
 );
 
-// Example static data (could come from Laravel API)
-const categories = [
-    { id: 1, name: '🍔 Food', percentage: '40 %', amount: 'IDR 360k', expensesCount: 16 },
-    { id: 2, name: '🏠 Housing', percentage: '30 %', amount: 'IDR 200k', expensesCount: 10 },
-    { id: 3, name: '🚗 Transportation', percentage: '10 %', amount: 'IDR 100k', expensesCount: 5 },
-    { id: 4, name: '💪 Health & Fitness', percentage: '15 %', amount: 'IDR 150k', expensesCount: 8 },
-    { id: 5, name: '🎉 Entertainment', percentage: '5 %', amount: 'IDR 50k', expensesCount: 3 }
-];
-
-const PieChart = () => {
+const PieChart = ({ categories }) => {
     // Data for Pie chart
-
     const data = categories.map(category => parseFloat(category.percentage.replace('%', '')));
-
     const pieData = {
         datasets: [
             {
@@ -107,7 +95,6 @@ const PieChart = () => {
                     </div>
                   </div>
                 ))}
-               
             </div>
         </div>
     );

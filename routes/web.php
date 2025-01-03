@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\HistoryController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,13 +39,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/Profile', [ProfileController::class, 'updateCategories'])->name('category.update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // History
+    Route::get('/History', [HistoryController::class, 'index'])->name('History');
+
     // Balance
     Route::post('/', [BalanceController::class, 'store'])->name('balances.store');
     Route::put('/', [BalanceController::class, 'update'])->name('balances.update');
-
-    Route::get('/History', function () {
-        return Inertia::render('Core/History');
-    })->name('History');
 });
 
 require __DIR__.'/auth.php';

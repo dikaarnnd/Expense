@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { Head, Link } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import DrawerLayout from '@/Layouts/DrawerLayout';
 
 import ExpOverview from '@/Components/ExpOverview';
 import PieChart from '@/Components/PieChartExp';
 
-export default function History() {
+export default function History({ setBalance, totalExpenses, remainingBalance, categoriesUsage, dailyExpense, category }) {
 
-  const [balance, setBalance] = useState(null);
+  const [balance, setYourBalance] = useState(null);
   const [expenses, setExpenses] = useState(0);
   const cashFlow = balance !== null ? balance - expenses : null;
 
@@ -36,13 +36,30 @@ export default function History() {
     return '';
   };
 
-  const categories = [
-    { id: 1, name: '🍔 Food', percentage: '40 %', amount: 'IDR 360k', expensesCount: 16 },
-    { id: 2, name: '🏠 Housing', percentage: '30 %', amount: 'IDR 200k', expensesCount: 10 },
-    { id: 3, name: '🚗 Transportation', percentage: '10 %', amount: 'IDR 100k', expensesCount: 5 },
-    { id: 4, name: '💪 Health & Fitness', percentage: '15 %', amount: 'IDR 150k', expensesCount: 8 },
-    { id: 5, name: '🎉 Entertainment', percentage: '5 %', amount: 'IDR 50k', expensesCount: 3 }
-  ];
+  // Set nilai awal balance dari props
+  useEffect(() => {
+    if (setBalance !== null && setBalance !== undefined) {
+      setYourBalance(setBalance);
+    }
+  }, [setBalance]);
+
+  // Format data untuk memastikan semua hari dalam seminggu ada
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const formattedCategoriesData = daysOfWeek.map((day) => {
+    const dayData = dailyExpense.find((expense) => expense.day === day);
+    return {
+        day,
+        total_expense: dayData ? parseInt(dayData.total_amount) : 0,
+    };
+  });
+
+  const categories = categoriesUsage.map((category) => ({
+    id: category.row_number,
+    name: `${category.emoji} ${category.name}`,
+    percentage: `${((category.total_amount / totalExpenses) * 100).toFixed(1)}%`, // Hitung persentase
+    amount: `IDR ${category.total_amount.toLocaleString('id-ID')}`, // Format mata uang
+    expensesCount: category.expenses_count,
+  }));
 
     return (
       <>
@@ -64,7 +81,7 @@ export default function History() {
                     <p className={` ${!balance ? 'nodataText' : 'text-darkprimary currency'}`}> 
                       {balance ? (
                         <>
-                          <span className="text-lg pr-1">IDR </span>{formatCurrency(expenses)}
+                          <span className="text-lg pr-1">IDR </span>{formatCurrency(totalExpenses)}
                         </>
                       )  : '// Please set your balance first'}
                     
@@ -79,7 +96,7 @@ export default function History() {
                     <p className={` ${!balance ? 'nodataText' : 'text-secondary currency'}`}> 
                       {balance ? (
                         <>
-                          <span className="text-lg pr-1">IDR </span>{formatCurrency(cashFlow)}
+                          <span className="text-lg pr-1">IDR </span>{formatCurrency(remainingBalance)}
                         </>
                       )  : '// Please set your balance first'}
                     
@@ -90,7 +107,7 @@ export default function History() {
 
                 {/* Grafiknya 🔻 */}
                 <section className='col-span-3'>
-                  <ExpOverview/>
+                  <ExpOverview data={formattedCategoriesData}/>
                 </section>
                   
                 
@@ -100,13 +117,10 @@ export default function History() {
               <section className="col-span-1 bg-white p-4 rounded-lg shadow">
                 <div className='flex items-center justify-between mr-2'>
                   <h1 className='boxLabel'> Top Categories</h1>
-                  
                 </div>
-                <PieChart/>
+                <PieChart categories={categories}/>
               </section>
-
             </div>
-
           </main>
         </DrawerLayout>
       </>
