@@ -72,7 +72,6 @@ const PieChart = ({ categories }) => {
           },
         },
     };
-
     return (
         <div>
             {/* Pie chart */}

@@ -7,23 +7,11 @@ import DrawerLayout from '@/Layouts/DrawerLayout';
 import ExpOverview from '@/Components/ExpOverview';
 import PieChart from '@/Components/PieChartExp';
 
-export default function History({ setBalance, totalExpenses, remainingBalance, categoriesUsage, dailyExpense, category }) {
+export default function History({ setBalance, totalExpenses, remainingBalance, categoriesUsage, dailyExpense }) {
 
   const [balance, setYourBalance] = useState(null);
   const [expenses, setExpenses] = useState(0);
   const cashFlow = balance !== null ? balance - expenses : null;
-
-  const formatBalance = (balance) => {
-    if (balance !== null) {
-      // Use Intl.NumberFormat to format the number
-      return new Intl.NumberFormat('id-ID', {
-        style: 'decimal',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }).format(balance);
-    }
-    return '';
-  };
 
   const formatCurrency = (value) => {
     if (value !== null) {
@@ -67,13 +55,9 @@ export default function History({ setBalance, totalExpenses, remainingBalance, c
         <DrawerLayout>
           <main className="p-6 min-h-svh space-y-4 ">
             <h1 className="text-2xl font-bold">All reports follow this filter</h1>
-    
-          
             <div className="grid grid-cols-3 gap-4 forBoxes" >
               {/* Expense Overview*/}
-
               <div className="col-span-2 space-y-4">
-               
                 <div className='grid grid-cols-5 gap-4 '>
                 {/* Total Expenses data (output) 🔻 */}        
                   <section className='col-span-2'>
@@ -84,9 +68,9 @@ export default function History({ setBalance, totalExpenses, remainingBalance, c
                           <span className="text-lg pr-1">IDR </span>{formatCurrency(totalExpenses)}
                         </>
                       )  : '// Please set your balance first'}
-                    
                     </p>
                   </section>
+
                   {/* Total Cash Flow (output) 🔻 */}    
                   <section className='col-span-3'>
                     <div className='flex justify-between items-center'>
@@ -102,15 +86,12 @@ export default function History({ setBalance, totalExpenses, remainingBalance, c
                     
                     </p>
                   </section>
-
                 </div>
 
                 {/* Grafiknya 🔻 */}
                 <section className='col-span-3'>
                   <ExpOverview data={formattedCategoriesData}/>
                 </section>
-                  
-                
               </div>
 
               {/* Top Categories 🔻*/}
