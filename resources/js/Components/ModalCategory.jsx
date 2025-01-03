@@ -17,7 +17,7 @@ const Modal = ({ isOpen, onClose, children }) => {
     );
 };
 
-export default function ModalCategory({ categories = [], userCategories = [] }) {
+export default function ModalCategory({ categories = []}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [checkedCategories, setCheckedCategories] = useState(categories);
     const [balance, setYourBalance] = useState("");
@@ -52,7 +52,7 @@ export default function ModalCategory({ categories = [], userCategories = [] }) 
 
         router.post(route('category.update'), data, {
             onSuccess: () => {
-                // alert("Preferences successfully saved!");
+                alert("Preferences successfully saved!");
                 closeModal();
             },
             onError: (errors) => {

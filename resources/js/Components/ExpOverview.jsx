@@ -22,24 +22,24 @@ ChartJS.register(
     Legend,
 );
 
-// const categories = [
-//   { id: 1, day: 'Monday', amount: 'IDR 100k', expensesCount: 5 },
-//   { id: 2, day: 'Tuesday', amount: 'IDR 120k', expensesCount: 6 },
-//   { id: 3, day: 'Wednesday', amount: 'IDR 80k', expensesCount: 4 },
-//   { id: 4, day: 'Thursday', amount: 'IDR 90k', expensesCount: 5 },
-//   { id: 5, day: 'Friday', amount: 'IDR 110k', expensesCount: 7 },
-//   { id: 6, day: 'Saturday', amount: 'IDR 150k', expensesCount: 8 },
-//   { id: 7, day: 'Sunday', amount: 'IDR 130k', expensesCount: 6 },
-// ];
+const categories = [
+  { id: 1, day: 'Monday', amount: 'IDR 100k', expensesCount: 5 },
+  { id: 2, day: 'Tuesday', amount: 'IDR 120k', expensesCount: 6 },
+  { id: 3, day: 'Wednesday', amount: 'IDR 80k', expensesCount: 4 },
+  { id: 4, day: 'Thursday', amount: 'IDR 90k', expensesCount: 5 },
+  { id: 5, day: 'Friday', amount: 'IDR 110k', expensesCount: 7 },
+  { id: 6, day: 'Saturday', amount: 'IDR 150k', expensesCount: 8 },
+  { id: 7, day: 'Sunday', amount: 'IDR 130k', expensesCount: 6 },
+];
 
 export default function ExpOverview ({ data })  {
     // Extracting the data for the Line chart
     const chartData = {
-        labels: data.map((expense) => expense.day), // X-axis labels
+        labels: categories.map((expense) => expense.day), // X-axis labels
         datasets: [
             {
                 label: 'Daily Expenses (IDR)',
-                data: data.map((expense) =>expense.total_expense), // Data values (amount)
+                data: categories.map((expense) =>expense.total_expense), // Data values (amount)
                 fill: false,
                 borderColor: 'rgba(75,192,192,1)', // Line color
                 tension: 0.1,

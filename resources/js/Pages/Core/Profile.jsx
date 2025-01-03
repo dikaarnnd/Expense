@@ -7,6 +7,7 @@ import TextInput from '@/Components/TextInput';
 import DrawerLayout from '@/Layouts/DrawerLayout';
 import ModalCategory from '@/Components/ModalCategory';
 import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
+import DateRangeInput from '@/Components/DateRangeInput';
 
 const Profile = ({ setBalance, categories, userCategories }) => {
   const user = usePage().props.auth.user;
@@ -27,6 +28,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
 
   const [EditUser, setEditUser] = useState(false);
   const [EditBalance, setEditBalance] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Set nilai awal balance dari props
   useEffect(() => {
@@ -38,6 +40,33 @@ const Profile = ({ setBalance, categories, userCategories }) => {
   const handleLogout = () => {
     router.post(route('logout')); // Melakukan POST ke route logout
   };
+
+  useEffect(() => {
+    if (period === 'monthly') {
+        const currentDate = new Date();
+        const start = currentDate.toISOString().split('T')[0]; // Set start date to current date
+        const end = new Date(currentDate);
+        end.setMonth(end.getMonth() + 1); // Set end date to 1 month later
+        setStartDate(start);
+        setEndDate(end.toISOString().split('T')[0]); // Format end date
+    }
+  }, [period, EditBalance]); // Re-run effect when modal opens or period changes
+
+  // Reset balance and last updated when a month has passed since last update
+  useEffect(() => {
+      if (period === 'monthly' && lastUpdated) {
+          const currentDate = new Date();
+          const lastUpdateDate = new Date(lastUpdated);
+          const oneMonthLater = new Date(lastUpdateDate);
+          oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
+          if (currentDate >= oneMonthLater) {
+              setYourBalance(""); // Reset balance
+              setLastUpdated(null); // Reset last updated date
+              alert("Your balance has been reset as a month has passed!");
+          }
+      }
+  }, [period, lastUpdated]);
 
   const formatBalance = (balance) => {
     if (balance !== null) {
@@ -51,12 +80,19 @@ const Profile = ({ setBalance, categories, userCategories }) => {
     return '';
   };
 
-  const handleSubmit = (selectedCategories) => {
-    router.post(route('category.update'), { categories: selectedCategories }, {
-      onSuccess: () => {
-          setSelectedCategoriesState(selectedCategories);
-      },
-    });
+  // Fungsi untuk membuka modal dalam mode "Add"
+  const openAddBalanceModal = () => {
+    setYourBalance(''); // Reset balance
+    setPeriod('monthly'); // Atur default period (opsional)
+    setIsEditing(false); // Set mode menjadi "Add"
+    setEditBalance(true); // Buka modal
+  };
+
+  // Fungsi untuk membuka modal dalam mode "Edit"
+  const openEditBalanceModal = () => {
+    setPeriod('');
+    setIsEditing(true); // Set mode menjadi "Edit"
+    setEditBalance(true); // Buka modal
   };
 
   const handleSave = () => {
@@ -94,7 +130,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
         end_date: endDate,
     };
 
-    if (EditBalance) {
+    if (isEditing) {
         // Call API to update balance
         router.put(route('balances.update'), data, {
             onSuccess: () => {
@@ -252,10 +288,18 @@ const Profile = ({ setBalance, categories, userCategories }) => {
                 <section>
                   <div className='flex items-center justify-between mr-2 '>
                     <h1 className='boxLabel '>Your current balance</h1>
-                    <FaEdit
-                        className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
-                        onClick={() => setEditBalance(true)}
-                    />
+                    {balance ? (
+                      <>
+                        <FaEdit
+                          className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
+                          onClick={openEditBalanceModal}
+                        />
+                      </>
+                    )  : <FaEdit
+                            className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
+                            onClick={openAddBalanceModal}
+                          />
+                    }
                   </div>
                   <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                     {balance ? (
@@ -269,7 +313,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                           <div className='flex justify-between items-start'>
                             <div className="min-h-20 mt-2 space-y-2">
-                              <h1>Edit your balance</h1>
+                              <h1>{isEditing ? "Edit your balance" : "Add a new balance"}</h1>
                               <h2>Balance helps track expenses.</h2>
                             </div>
                           </div>
@@ -345,7 +389,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
                           <div className="flex justify-between items-center">
                               <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
                               <button className="confirmBtn" type='submit'>
-                                  {EditBalance ? "Update balance" : "Set balance"}
+                                  {isEditing ? "Update balance" : "Set balance"}
                               </button>
                           </div>
                           </form>
@@ -358,7 +402,8 @@ const Profile = ({ setBalance, categories, userCategories }) => {
                   <div className='min-h-40 space-y-4'>
                     <div className='flex items-center justify-between mr-2 '>
                       <h1 className='boxLabel'> Your active categories</h1>
-                      <ModalCategory categories={categoryList} onSave={handleSubmit} />
+                      {/* <ModalCategory categories={categoryList} onSave={handleSubmit} /> */}
+                      <ModalCategory categories={categoryList} />
                     </div>
 
                     <div >

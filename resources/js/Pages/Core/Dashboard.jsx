@@ -1,23 +1,34 @@
 /* eslint-disable prettier/prettier */
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
 import DrawerLayout from '@/Layouts/DrawerLayout';
+import TextInput from '@/Components/TextInput';
+import DateRangeInput from '@/Components/DateRangeInput';
+import ModalCategory from '@/Components/ModalCategory';
 
 import ExpOverview from '@/Components/ExpOverview';
 import ExpTable from '@/Components/ExpTable';
 import IconLink from '@/Components/IconLink';
-import ModalBalance from '@/Components/ModalBalance';
-import ModalEditBalance from '@/Components/ModalBalance';
-import ModalCategory from '@/Components/ModalCategory';
 
 import { IoIosArrowForward } from "react-icons/io";
 import { FaEdit, FaRegPlusSquare } from "react-icons/fa";
 
 
-export default function Dashboard({ setBalance: initialSetBalance, expense, totalExpenses, remainingBalance, categoriesUsage, dailyExpense }) {
-  const [balance, setBalance] = useState(null);
+export default function Dashboard({ setBalance, expense, totalExpenses, remainingBalance, categoriesUsage, dailyExpense, category }) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const [balance, setYourBalance] = useState(null);
+  const [period, setPeriod] = useState(); // Add state for period
+  const [startDate, setStartDate] = useState(null); // Changed to null as default
+  const [endDate, setEndDate] = useState(null); // Changed to null as default
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [categoryList, setCategoryList] = useState(category);
+
   const [expenses, setExpenses] = useState(0);
+  const [EditBalance, setEditBalance] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
   const cashFlow = balance !== null ? balance - expenses : null;
 
   const formatBalance = (balance) => {
@@ -34,10 +45,37 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
 
   // Set nilai awal balance dari props
   useEffect(() => {
-    if (initialSetBalance !== null && initialSetBalance !== undefined) {
-      setBalance(initialSetBalance);
+    if (setBalance !== null && setBalance !== undefined) {
+      setYourBalance(setBalance);
     }
-  }, [initialSetBalance]);
+  }, [setBalance]);
+
+  useEffect(() => {
+    if (period === 'monthly') {
+        const currentDate = new Date();
+        const start = currentDate.toISOString().split('T')[0]; // Set start date to current date
+        const end = new Date(currentDate);
+        end.setMonth(end.getMonth() + 1); // Set end date to 1 month later
+        setStartDate(start);
+        setEndDate(end.toISOString().split('T')[0]); // Format end date
+    }
+  }, [period, EditBalance]); // Re-run effect when modal opens or period changes
+
+  // Reset balance and last updated when a month has passed since last update
+  useEffect(() => {
+      if (period === 'monthly' && lastUpdated) {
+          const currentDate = new Date();
+          const lastUpdateDate = new Date(lastUpdated);
+          const oneMonthLater = new Date(lastUpdateDate);
+          oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
+          if (currentDate >= oneMonthLater) {
+              setYourBalance(""); // Reset balance
+              setLastUpdated(null); // Reset last updated date
+              alert("Your balance has been reset as a month has passed!");
+          }
+      }
+  }, [period, lastUpdated]);
 
   const formatCurrency = (value) => {
     if (value !== null) {
@@ -72,6 +110,65 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
           total_expense: dayData ? parseInt(dayData.total_amount) : 0,
       };
   });
+
+  // Fungsi untuk membuka modal dalam mode "Add"
+  const openAddBalanceModal = () => {
+    setYourBalance(''); // Reset balance
+    setPeriod('monthly'); // Atur default period (opsional)
+    setIsEditing(false); // Set mode menjadi "Add"
+    setEditBalance(true); // Buka modal
+  };
+
+  // Fungsi untuk membuka modal dalam mode "Edit"
+  const openEditBalanceModal = () => {
+    setPeriod('');
+    setIsEditing(true); // Set mode menjadi "Edit"
+    setEditBalance(true); // Buka modal
+  };
+
+  const handleSubmit = () => {
+    // Validate balance
+    if (isNaN(balance) || balance <= 0) {
+        alert("Please enter a valid positive balance.");
+        return;
+    }
+
+    const data = {
+        setBalance: balance,
+        plan_date: period,
+        start_date: startDate,
+        end_date: endDate,
+    };
+
+    if (isEditing) {
+        // Call API to update balance
+        router.put(route('balances.update'), data, {
+            onSuccess: () => {
+                alert('Balance successfully updated!');
+                setEditBalance(false);
+            },
+            onError: (errors) => handleErrors(errors),
+        });
+    } else {
+        // Call API to add new balance
+        router.post(route('balances.store'), data, {
+            onSuccess: () => {
+                alert('Balance successfully added!');
+                setEditBalance(false);
+            },
+            onError: (errors) => handleErrors(errors),
+        });
+    }
+  };
+
+  const handleErrors = (errors) => {
+    const errorMessages = [];
+    if (errors.setBalance) errorMessages.push(`Balance: ${errors.setBalance}`);
+    if (errors.plan_date) errorMessages.push(`Period: ${errors.plan_date}`);
+    if (errors.start_date) errorMessages.push(`Start Date: ${errors.start_date}`);
+    if (errors.end_date) errorMessages.push(`End Date: ${errors.end_date}`);
+    alert(errorMessages.length > 0 ? errorMessages.join('\n') : "An error occurred. Please try again.");
+  };
   
     return (
       <>
@@ -91,8 +188,19 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
               {/* Balance data (output) 🔻 */}
               <section className='col-span-2 '>
                 <div className='flex items-center justify-between mr-2 '>
-                  <h1 className={` ${!balance ? 'boxLabel' : 'boxLabel'}`}> Your Balance</h1>
-                  <ModalBalance/>
+                  <h1 className='boxLabel'> Your Balance</h1>
+                  {balance ? (
+                      <>
+                        <FaEdit
+                          className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
+                          onClick={openEditBalanceModal}
+                        />
+                      </>
+                    )  : <FaEdit
+                            className="text-paleBlack text-lg rounded-md hover:cursor-pointer"
+                            onClick={openAddBalanceModal}
+                          />
+                    }
                 </div>
                 <p className={` ${!balance ? 'nodataText ' : 'text-green currency'}`}>
                   {balance ? (
@@ -101,6 +209,94 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
                       </>
                     )  : '// No balance has been set'}
                 </p>
+                {EditBalance && (
+                  <div className="modal-overlay" onClick={() => setEditBalance(false)}>
+                      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className='flex justify-between items-start'>
+                          <div className="min-h-20 mt-2 space-y-2">
+                            <h1>{isEditing ? "Edit your balance" : "Add a new balance"}</h1>
+                            <h2>Balance helps track expenses.</h2>
+                          </div>
+                        </div>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSubmit();
+                            }}
+                            className='mt-4 space-y-4 min-h-10'
+                        >
+                          <div className="flex justify-between">
+                            <div className="flex-col">
+                                <p className="inputLabel">Set balance</p>
+                                <p className="tipLabel">// Set your balance</p>
+                            </div>
+                            <TextInput
+                                id="setBalance"
+                                name="setBalance"
+                                type="number"
+                                step="0.01"
+                                placeholder="Type amount of IDR..."
+                                className="w-2/3"
+                                autoComplete="off"
+                                value={balance} // Controlled input
+                                onChange={(e) => setYourBalance(e.target.value)}
+                                required
+                            />
+                          </div>
+
+                          <div className="flex justify-between">
+                            <div className="flex-col">
+                                <p className="inputLabel">Select period</p>
+                                <p className="tipLabel">// Set your balance period</p>
+                            </div>
+
+                            <div className="flex space-x-4 p-2 w-2/3">
+                              <label className='rad'>
+                                  <input
+                                      type="radio"
+                                      name='period'
+                                      value="monthly"
+                                      checked={period === 'monthly'}
+                                      onChange={() => setPeriod('monthly')}
+                                  />
+                                  Monthly
+                              </label>
+                              <label className='rad'>
+                                  <input
+                                    type="radio"
+                                    name='period'
+                                    value="custom"
+                                    checked={period === 'custom'}
+                                    onChange={() => setPeriod('custom')}
+                                  />
+                                  Custom
+                              </label>
+                            </div>
+                        </div>
+
+                        {period === "custom" && (
+                            <DateRangeInput
+                                onStartDateChange={(date) => {
+                                    console.log("Start Date:", date);
+                                    setStartDate(date);
+                                }}
+                                onEndDateChange={(date) => {
+                                    console.log("End Date:", date);
+                                    setEndDate(date);
+                                }}
+                            />
+                        )}
+
+                        <div className="flex justify-between items-center">
+                            <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
+                            <button className="confirmBtn" type='submit'>
+                                {isEditing ? "Update balance" : "Set balance"}
+                            </button>
+                        </div>
+                        </form>
+                      </div>
+                  </div>
+                )}
               </section>
 
               {/* Total Expenses data (output) 🔻 */}        
@@ -146,7 +342,7 @@ export default function Dashboard({ setBalance: initialSetBalance, expense, tota
               <section className='col-span-1'>
                 <div className='flex items-center justify-between mr-2'>
                   <h1 className='boxLabel'> Top Categories</h1>
-                  {/* <ModalCategory/> */}
+                  <ModalCategory categories={categoryList}/>
                 </div>
 
                 {/* Data top categories 👇 🏆*/}
