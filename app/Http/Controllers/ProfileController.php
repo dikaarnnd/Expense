@@ -53,7 +53,7 @@ class ProfileController extends Controller
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8', // Tambahkan konfirmasi password
+            'password' => 'nullable|string|min:8',
         ]);
 
         $updateData = [
