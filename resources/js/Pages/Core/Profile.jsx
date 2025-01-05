@@ -3,7 +3,9 @@ import { Head, Link, usePage, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import { FaEdit} from "react-icons/fa";
 
+import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
+import PasswordInput from '@/Components/PasswordInput';
 import DrawerLayout from '@/Layouts/DrawerLayout';
 import ModalCategory from '@/Components/ModalCategory';
 import DeleteUserForm from '../Profile/Partials/DeleteUserForm';
@@ -205,67 +207,67 @@ const Profile = ({ setBalance, categories, userCategories }) => {
                   {/* Modal untuk mengedit profil */}
                   {EditUser && (
                     <div className="modal-overlay" onClick={() => setEditUser(false)}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                          <div className='flex justify-between items-start'>
-                            <div className="min-h-20 mt-2 space-y-2">
-                              <h1>Edit your profile</h1>
-                            </div>
+                      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className='flex justify-between items-start'>
+                          <div className="min-h-20 mt-2 space-y-2">
+                            <h1>Edit your profile</h1>
+                            <p> Update one or more of your profile information</p>
                           </div>
-                          <form
-                              onSubmit={(e) => {
-                                  e.preventDefault();
-                                  handleSave();
-                              }}
-                          >
-                            <div className="mb-4">
-                              <label className="inputLabel">Name</label>
-                              <TextInput
-                                type="text"
-                                className="w-full p-2 border rounded"
-                                value={name}
-                                autoComplete="off"
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                              />
-                            </div>
-                            <div className="mb-4">
-                              <label className="inputLabel">Email</label>
-                              <TextInput
-                                type="email"
-                                className="w-full p-2 border rounded"
-                                value={email}
-                                // autoComplete="off"
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                              />
-                            </div>
-                            <div className="mb-4">
-                              <label className="inputLabel">Password</label>
-                              <TextInput
-                                type="password"
-                                className="w-full p-2 border rounded"
-                                value={password}
-                                // autoComplete="off"
-                                onChange={(e) => setPassword(e.target.value)}
-                              />
-                            </div>
-                            <div className="flex justify-end space-x-2">
-                                <button
-                                    type="button"
-                                    className="confirmBtn"
-                                    onClick={() => setEditUser(false)}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="confirmBtn"
-                                >
-                                    Save
-                                </button>
-                            </div>
-                          </form>
                         </div>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSave();
+                            }}
+                        >
+                          <div className="mb-4">
+                            <InputLabel htmlFor="name" value="Name" />
+                            <TextInput
+                              type="text"
+                              className="mt-1 block w-full"
+                              value={name}
+                              autoComplete="off"
+                              onChange={(e) => setName(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <InputLabel htmlFor="email" value="Email" />
+                            <TextInput
+                              type="email"
+                              className="mt-1 block w-full"
+                              value={email}
+                              // autoComplete="off"
+                              onChange={(e) => setEmail(e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <InputLabel htmlFor="password" value="Password" />
+                            <PasswordInput
+                              className="w-full p-2 border rounded"
+                              value={password}
+                              // autoComplete="off"
+                              onChange={(e) => setPassword(e.target.value)}
+                            />
+                          </div>
+                          <div className="flex justify-end space-x-2">
+                              {/* <button
+                                  type="button"
+                                  className="confirmBtn"
+                                  onClick={() => setEditUser(false)}
+                              >
+                                  Cancel
+                              </button> */}
+                              <button
+                                  type="submit"
+                                  className="confirmBtn"
+                              >
+                                  Save
+                              </button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
                   )}
                 </section>

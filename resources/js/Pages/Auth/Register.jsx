@@ -2,6 +2,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 // import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import PasswordInput from '@/Components/PasswordInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import regBg from '../../../images/registerBg.png';
@@ -64,7 +65,7 @@ export default function Register() {
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                {/* <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
 
                     <TextInput
@@ -79,6 +80,17 @@ export default function Register() {
                     />
 
                     <InputError message={errors.password} className="mt-2" />
+                </div> */}
+
+                <div className="mt-6">
+                    <InputLabel htmlFor="password" value="Password" />
+                    <PasswordInput
+                        value={data.password}
+                        onChange={(e) => setData('password', e.target.value)}
+                        autoComplete="new-password"
+                    />
+                    <InputError message={errors.password} className="mt-2" />
+
                 </div>
 
                 {/* <div className="mt-4">
