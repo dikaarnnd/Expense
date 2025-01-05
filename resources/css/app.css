@@ -51,6 +51,7 @@ body {
 
 
 
+
 .prevnextDisabled {
   @apply text-subheading text-sm font-GRegular px-4 py-2;
 }

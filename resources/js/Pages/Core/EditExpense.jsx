@@ -6,11 +6,13 @@ import DrawerLayout from '@/Layouts/DrawerLayout';
 
 import TextInput from '@/Components/TextInput';
 
-export default function AddExpense({ userCategories = [], expense }) {
+export default function EditExpense({ userCategories = [], expense }) {
   const [selectedDate, setSelectedDate] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [note, setNote] = useState('');
+  const [errors, setErrors] = useState({});
+
 
   useEffect(() => {
     setSelectedDate(expense.buyDate); // Set the existing date
@@ -24,34 +26,68 @@ export default function AddExpense({ userCategories = [], expense }) {
   };
   
 
+  const validateForm = () => {
+    const validationErrors = {};
+  
+    // Validate price
+    if (!price || price <= 0) {
+      validationErrors.price = 'Price must be a positive number.';
+    }
+  
+    // Validate category
+    if (!category) {
+      validationErrors.category = 'Please select a category.';
+    }
+  
+    // Validate date
+    if (!selectedDate) {
+      validationErrors.buyDate = 'Please select a date.';
+    }
+  
+    // Validate notes if provided (optional field)
+    if (note && note.length < 3) {
+      validationErrors.notes = 'Notes must be at least 3 characters long.';
+    }
+  
+    setErrors(validationErrors); // Set errors state
+    return Object.keys(validationErrors).length === 0; // Return true if no errors
+  };
+  
   const handleSubmit = (event) => {
     event.preventDefault();
-
+  
+    // Validate form before submitting
+    if (!validateForm()) {
+      return; // If validation fails, do not proceed with submission
+    }
+  
     const expenseData = {
-        id: expense.expense_id,
-        price,
-        category_id: category,
-        notes: note,
-        buyDate: selectedDate,
+      id: expense.expense_id,
+      price,
+      category_id: category,
+      notes: note,
+      buyDate: selectedDate,
     };
-
-    console.log(expenseData);
+  
+    console.log(expenseData); // Log expense data (for debugging)
+  
     router.put(route('edit.expense', { id: expense.expense_id }), expenseData, {
       preserveScroll: true,
       onSuccess: () => {
-        router.reload(),
+        router.reload();
         // Reset form
         setPrice('');
         setCategory('');
         setNote('');
         setSelectedDate(new Date().toISOString().split('T')[0]);
+        setErrors({}); // Reset errors
       },
-      // onError: handleErrors,
       onError: (error) => {
-        console.error(error); // Log error ke console
-      }
+        console.error(error); // Log error to console
+      },
     });
-``};
+  };
+  
   
   return (
     <>
@@ -73,6 +109,8 @@ export default function AddExpense({ userCategories = [], expense }) {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               />
+              {errors.price && <p className="text-red-600 text-sm">{errors.price}</p>}
+
               <div className="flex space-x-8 justify-between">
                 <div className="flex-col">
                   <p className="inputLabel">Pick a category</p>
@@ -85,13 +123,14 @@ export default function AddExpense({ userCategories = [], expense }) {
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value="">Select Category</option>
+                  {/* <option value="">Select Category</option> */}
                   {userCategories.map((category) => (
                       <option key={category.id} value={category.id}>
                           {category.emoji} {category.name}
                       </option>
                   ))}
                 </select>
+                {errors.category && <p className="text-red-600 text-sm">{errors.category}</p>}
               </div>
               
               <TextInput
@@ -102,6 +141,8 @@ export default function AddExpense({ userCategories = [], expense }) {
                 value={selectedDate} 
                 onChange={handleDateChange}
               />
+              {errors.buyDate && <p className="text-red-600 text-sm">{errors.buyDate}</p>}
+
               <TextArea
                 label="Notes" tip="// What was this expense for?"
                 id="notes" name="notes"
@@ -109,6 +150,8 @@ export default function AddExpense({ userCategories = [], expense }) {
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
+              {errors.notes && <p className="text-red-600 text-sm">{errors.notes}</p>}
+
               <div className="flex justify-between items-center">
                 <p className="text-paleBlack text-sm font-GRegular"> Today is {new Date().toLocaleDateString()}</p>
                 <button className="confirmBtn ">Update</button>

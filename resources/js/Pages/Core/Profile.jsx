@@ -16,7 +16,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [balance, setYourBalance] = useState(null);
-  const [period, setPeriod] = useState(); // Add state for period
+  const [period, setPeriod] = useState('monthly'); // Add state for period
   const [startDate, setStartDate] = useState(null); // Changed to null as default
   const [endDate, setEndDate] = useState(null); // Changed to null as default
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -92,7 +92,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
 
   // Fungsi untuk membuka modal dalam mode "Edit"
   const openEditBalanceModal = () => {
-    setPeriod('');
+    setPeriod('monthly');
     setIsEditing(true); // Set mode menjadi "Edit"
     setEditBalance(true); // Buka modal
   };
@@ -108,7 +108,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
     const data = { name, email, password };
     router.put(route('profile.update', user.id), data, {
         onSuccess: () => {
-            alert('Profile updated successfully!');
+            // alert('Profile updated successfully!');
             setEditUser(false); // Tutup modal
         },
         onError: (errors) => {
@@ -136,7 +136,7 @@ const Profile = ({ setBalance, categories, userCategories }) => {
         // Call API to update balance
         router.put(route('balances.update'), data, {
             onSuccess: () => {
-                alert('Balance successfully updated!');
+                // alert('Balance successfully updated!');
                 setEditBalance(false);
             },
             onError: (errors) => handleErrors(errors),

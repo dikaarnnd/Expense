@@ -19,7 +19,7 @@ export default function Dashboard({ setBalance, expense, totalExpenses, remainin
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [balance, setYourBalance] = useState(null);
-  const [period, setPeriod] = useState(); // Add state for period
+  const [period, setPeriod] = useState('monthly'); // Add state for period
   const [startDate, setStartDate] = useState(null); // Changed to null as default
   const [endDate, setEndDate] = useState(null); // Changed to null as default
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -121,7 +121,7 @@ export default function Dashboard({ setBalance, expense, totalExpenses, remainin
 
   // Fungsi untuk membuka modal dalam mode "Edit"
   const openEditBalanceModal = () => {
-    setPeriod('');
+    setPeriod('monthly');
     setIsEditing(true); // Set mode menjadi "Edit"
     setEditBalance(true); // Buka modal
   };
@@ -211,90 +211,90 @@ export default function Dashboard({ setBalance, expense, totalExpenses, remainin
                 </p>
                 {EditBalance && (
                   <div className="modal-overlay" onClick={() => setEditBalance(false)}>
-                      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className='flex justify-between items-start'>
-                          <div className="min-h-20 mt-2 space-y-2">
-                            <h1>{isEditing ? "Edit your balance" : "Add a new balance"}</h1>
-                            <h2>Balance helps track expenses.</h2>
-                          </div>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                      <div className='flex justify-between items-start'>
+                        <div className="min-h-20 mt-2 space-y-2">
+                          <h1>{isEditing ? "Edit your balance" : "Add a new balance"}</h1>
+                          <h2>Balance helps track expenses.</h2>
                         </div>
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleSubmit();
-                            }}
-                            className='mt-4 space-y-4 min-h-10'
-                        >
-                          <div className="flex justify-between">
-                            <div className="flex-col">
-                                <p className="inputLabel">Set balance</p>
-                                <p className="tipLabel">// Set your balance</p>
-                            </div>
-                            <TextInput
-                                id="setBalance"
-                                name="setBalance"
-                                type="number"
-                                step="0.01"
-                                placeholder="Type amount of IDR..."
-                                className="w-2/3"
-                                autoComplete="off"
-                                value={balance} // Controlled input
-                                onChange={(e) => setYourBalance(e.target.value)}
-                                required
-                            />
+                      </div>
+                      <form
+                          onSubmit={(e) => {
+                              e.preventDefault();
+                              handleSubmit();
+                          }}
+                          className='mt-4 space-y-4 min-h-10'
+                      >
+                        <div className="flex justify-between">
+                          <div className="flex-col">
+                              <p className="inputLabel">Set balance</p>
+                              <p className="tipLabel">// Set your balance</p>
+                          </div>
+                          <TextInput
+                              id="setBalance"
+                              name="setBalance"
+                              type="number"
+                              step="0.01"
+                              placeholder="Type amount of IDR..."
+                              className="w-2/3"
+                              autoComplete="off"
+                              value={balance} // Controlled input
+                              onChange={(e) => setYourBalance(e.target.value)}
+                              required
+                          />
+                        </div>
+
+                        <div className="flex justify-between">
+                          <div className="flex-col">
+                              <p className="inputLabel">Select period</p>
+                              <p className="tipLabel">// Set your balance period</p>
                           </div>
 
-                          <div className="flex justify-between">
-                            <div className="flex-col">
-                                <p className="inputLabel">Select period</p>
-                                <p className="tipLabel">// Set your balance period</p>
-                            </div>
-
-                            <div className="flex space-x-4 p-2 w-2/3">
-                              <label className='rad'>
-                                  <input
-                                      type="radio"
-                                      name='period'
-                                      value="monthly"
-                                      checked={period === 'monthly'}
-                                      onChange={() => setPeriod('monthly')}
-                                  />
-                                  Monthly
-                              </label>
-                              <label className='rad'>
-                                  <input
+                          <div className="flex space-x-4 p-2 w-2/3">
+                            <label className='rad'>
+                                <input
                                     type="radio"
                                     name='period'
-                                    value="custom"
-                                    checked={period === 'custom'}
-                                    onChange={() => setPeriod('custom')}
-                                  />
-                                  Custom
-                              </label>
-                            </div>
-                        </div>
-
-                        {period === "custom" && (
-                            <DateRangeInput
-                                onStartDateChange={(date) => {
-                                    console.log("Start Date:", date);
-                                    setStartDate(date);
-                                }}
-                                onEndDateChange={(date) => {
-                                    console.log("End Date:", date);
-                                    setEndDate(date);
-                                }}
-                            />
-                        )}
-
-                        <div className="flex justify-between items-center">
-                            <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
-                            <button className="confirmBtn" type='submit'>
-                                {isEditing ? "Update balance" : "Set balance"}
-                            </button>
-                        </div>
-                        </form>
+                                    value="monthly"
+                                    checked={period === 'monthly'}
+                                    onChange={() => setPeriod('monthly')}
+                                />
+                                Monthly
+                            </label>
+                            <label className='rad'>
+                                <input
+                                  type="radio"
+                                  name='period'
+                                  value="custom"
+                                  checked={period === 'custom'}
+                                  onChange={() => setPeriod('custom')}
+                                />
+                                Custom
+                            </label>
+                          </div>
                       </div>
+
+                      {period === "custom" && (
+                          <DateRangeInput
+                              onStartDateChange={(date) => {
+                                  console.log("Start Date:", date);
+                                  setStartDate(date);
+                              }}
+                              onEndDateChange={(date) => {
+                                  console.log("End Date:", date);
+                                  setEndDate(date);
+                              }}
+                          />
+                      )}
+
+                      <div className="flex justify-between items-center">
+                          <p className="text-paleBlack text-sm font-GRegular">Today is {currentDate.toLocaleDateString()}</p>
+                          <button className="confirmBtn" type='submit'>
+                              {isEditing ? "Update balance" : "Set balance"}
+                          </button>
+                      </div>
+                      </form>
+                    </div>
                   </div>
                 )}
               </section>
