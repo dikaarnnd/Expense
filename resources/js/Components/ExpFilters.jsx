@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
-export default function ExpFilters({ label, options, onSelect, icon: Icon }) {
+export default function ExpFilters({ label, options, onSelect, icon: Icon , selectedCategory}) {
     const [selectedOption, setSelectedOption] = useState(options[0]);
     const [open, setOpen] = useState(false);
 
@@ -15,6 +15,11 @@ export default function ExpFilters({ label, options, onSelect, icon: Icon }) {
 
     // Toggle dropdown visibility
     const toggleDropdown = () => setOpen(!open);
+
+    useEffect(() => {
+        // Update selected option if selectedCategory in parent changes
+        setSelectedOption(selectedCategory || options[0]);
+    }, [selectedCategory, options]);
 
     return (
         <div className="dropdown bg-allWhite">

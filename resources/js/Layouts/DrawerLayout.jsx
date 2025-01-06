@@ -21,7 +21,7 @@ export default function DrawerLayout({ children }) {
     return (
         <div className="drawer lg:drawer-open  ">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content flex flex-col items-center justify-center">
+            <div className="drawer-content  flex flex-col items-center justify-center">
                 {/* Page content */}
                 <label
                     htmlFor="my-drawer-2"
@@ -41,7 +41,11 @@ export default function DrawerLayout({ children }) {
                 <div className="bg-allWhite h-svh justify-between flex flex-col text-allBlack text-base font-GRegular  w-52 p-4 border-r-1 border-r-paleBlack border">
                     
                     <div>
-                        <h1 className="py-3 font-GSemibold text-primary"> Expensure</h1>
+                        <Link href="/" >
+                            <h1 className="py-3 font-GSemibold text-primary">
+                             Expensure
+                            </h1>
+                        </Link>
                         <ul className="space-y-7 mt-6 ">
                             {menuItems.map((item) => (
                                 <li 
