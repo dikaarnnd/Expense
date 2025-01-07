@@ -1,6 +1,5 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import { Link } from '@inertiajs/react';
-import regBg from '../../images/registerBg.png';
+import expensurelogo from '../../images/expensurelogo.png';
 
 export default function GuestLayout({ children, bgImage }) {
     return (
@@ -15,7 +14,11 @@ export default function GuestLayout({ children, bgImage }) {
 
             <div className="w-full overflow-hidden px-20">
                 <Link href="/" className="flex items-center space-x-4">
-                    <ApplicationLogo className="size-12 fill-current text-gray-500" />
+                    <img
+                        src={expensurelogo}
+                        alt="expsurelogo"
+                        className="size-12 object-contain"
+                    />
                     <p className="appLabel"> Expensure</p>
                 </Link>
                 {children}

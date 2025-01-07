@@ -60,7 +60,7 @@ export default function ModalCategory({ categories = []}) {
 
         router.post(route('category.update'), data, {
             onSuccess: () => {
-                alert("Preferences successfully saved!");
+                // alert("Preferences successfully saved!");
                 closeModal();
             },
             onError: (errors) => {

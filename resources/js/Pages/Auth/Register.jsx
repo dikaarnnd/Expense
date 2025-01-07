@@ -1,6 +1,6 @@
+// eslint-disable-next-line prettier/prettier
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-// import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import PasswordInput from '@/Components/PasswordInput';
 import GuestLayout from '@/Layouts/GuestLayout';
@@ -27,8 +27,8 @@ export default function Register() {
         <GuestLayout bgImage={regBg}>
             <Head title="Register" />
             <div className="mb-8 mt-8 flex-col space-y-2">
-                <h1> Register </h1>
-                <p> Create a new account to get started</p>
+                <h1 className='font-GSemibold text-allBlack'> Register </h1>
+                <p className='font-GRegular text-paleBlack'> Create a new account to get started</p>
             </div>
             <form onSubmit={submit}>
                 <div>
@@ -133,7 +133,7 @@ export default function Register() {
                 </div>
             </form>
             <div className="my-4 flex items-end justify-end justify-items-center space-x-4 text-sm text-gray-600">
-                <p>Already have an account?</p>
+                <p className='font-GRegular text-paleBlack'>Already have an account?</p>
                 <Link href={route('login')} className="underlinedLink">
                     Log in
                 </Link>

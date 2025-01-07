@@ -174,7 +174,7 @@ export default function Dashboard({ setBalance, expense, totalExpenses, remainin
       <>
         <Head title="Dashboard" />
         <DrawerLayout>
-          <main className="p-6 min-h-svh space-y-4  ">
+          <main className="p-6 pt-5 min-h-svh space-y-4  ">
             <div className='mb-4 mt-2 flex items-center justify-between'>
               <h1 className="text-2xl ">Spending Smarter, Living Better!</h1>
               <IconLink href={route('AddExpense')} icon={FaRegPlusSquare} size='14px' className="p-2 px-4 rounded-md border border-subheading shadow-md">

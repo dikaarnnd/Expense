@@ -33,8 +33,8 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
             <div className="mb-8 mt-8 flex-col space-y-2">
-                <h1> Log in </h1>
-                <p> Log into an account</p>
+                <h1 className='font-GSemibold text-allBlack'> Log in </h1>
+                <p className='font-GRegular text-paleBlack'> Log into an account</p>
             </div>
             <form onSubmit={submit}>
                 <div>
@@ -112,7 +112,7 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             </form>
             <div className="my-4 flex items-end justify-end justify-items-center space-x-4 text-sm text-gray-600">
-                <p>Dont have an account?</p>
+                <p className='font-GRegular text-paleBlack'>Dont have an account?</p>
                 <Link href={route('register')} className="underlinedLink">
                     Register
                 </Link>

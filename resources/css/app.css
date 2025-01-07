@@ -10,12 +10,12 @@ body {
 
 .confirmBtn {
   @apply bg-primary text-allWhite py-2 px-4 rounded-md
-  transition-all duration-300 ease-out;
+  transition-all duration-200 ease-out;
 }
 
 
 .confirmBtn:hover {
-  @apply bg-darkprimary py-2 px-6 rounded-ss-3xl
+  @apply bg-darkprimary py-2 px-4 rounded-ss-3xl
  
 } 
 
@@ -29,7 +29,7 @@ body {
   
 }
 .underlinedLink {
-  @apply text-primary font-medium;
+  @apply text-primary font-GMedium;
 }
 
 .underlinedLink:hover {
@@ -84,7 +84,7 @@ body {
 
 /* Text Config */
 .appLabel {
-  @apply text-xl font-semibold text-primary;
+  @apply text-xl font-GSemibold text-primary;
 }
 
 h1 {
@@ -118,6 +118,10 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 110px; /* Adjust the max-width as needed */
+}
+
+.disabledMenu {
+  @apply text-gray-400;
 }
 
 

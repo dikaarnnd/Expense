@@ -53,8 +53,8 @@ export default function History({ setBalance, totalExpenses, remainingBalance, c
       <>
         <Head title="History" />
         <DrawerLayout>
-          <main className="p-6 min-h-svh space-y-4 ">
-            <h1 className="text-2xl font-bold">All reports follow this filter</h1>
+          <main className="p-6 pt-8 min-h-svh space-y-4 ">
+            <h1 className="text-2xl font-bold">Your expenses history</h1>
             <div className="grid grid-cols-3 gap-4 forBoxes" >
               {/* Expense Overview*/}
               <div className="col-span-2 space-y-4">
