@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Head, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
+import '../../../css/others.css'
 
 import DrawerLayout from '@/Layouts/DrawerLayout';
 import ExpFilters from '@/Components/ExpFilters';
@@ -17,12 +18,12 @@ export default function Expenses({ expenses, categories, filterCategory }) {
 
   const categoryMap = {
     1: { name: '🏠 Housing', emoji: '' },
-    2: { name: '📚 Education', emoji: '' },
-    3: { name: '🧳 Travel', emoji: '' },
-    4: { name: '🚗 Transportation', emoji: '' },
+    2: { name: '🍔 Food', emoji: '' },
+    3: { name: '🚗 Transportation', emoji: '' },
+    4: { name: '🧃 Groceries', emoji: '' },
     5: { name: '📳 Transfer', emoji: '' },
-    6: { name: '🧃 Groceries', emoji: '' },
-    7: { name: '🍔 Food', emoji: '' },
+    6: { name: '📚 Education', emoji: '' },
+    7: { name: '🧳 Travel', emoji: '' },
     8: { name: '🛠️ Repairs', emoji: '' },
     9: { name: '🕹️ Gadgets', emoji: '' },
     10: { name: '🎬 Entertainment', emoji: '' },

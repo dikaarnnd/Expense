@@ -20,7 +20,6 @@ const Modal = ({ isOpen, onClose, children }) => {
 export default function ModalCategory({ categories = []}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [checkedCategories, setCheckedCategories] = useState(categories);
-    const [balance, setYourBalance] = useState("");
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -29,15 +28,24 @@ export default function ModalCategory({ categories = []}) {
 
     // Handle checkbox change
     const handleCheckboxChange = (id) => {
-        setCheckedCategories((prev) =>
-            prev.map((category) =>
-                category.id === id
-                    ? { ...category, isChecked: !category.isChecked }
-                    : category
-            )
-        );
+      setCheckedCategories((prev) =>
+        prev.map((category) =>
+          category.id === id
+          ? { ...category, isChecked: !category.isChecked }
+          : category
+        )
+      );
     };
 
+    useEffect(() => {
+      // Ensure the first 10 categories are marked as checked
+      const mappedCategories = categories.map((category, index) => ({
+        ...category,
+        isChecked: index < 10, // Mark first 10 as checked
+      }));
+      setCheckedCategories(mappedCategories);
+    }, [categories]);
+    
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -83,50 +91,50 @@ export default function ModalCategory({ categories = []}) {
 
                 {/* Form with Flex styling */}
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-                    <div className="grid grid-cols-2 gap-5 my-4 font-GLight">
-                        {/* Checked Categories (grid-cols-2) */}
-                        <div>
-                            {checked.length > 0 ? (
-                                <ul className="space-y-2 max-h-48 overflow-y-auto">
-                                    {checked.map((category) => (
-                                        <li key={category.id} className="flex items-center">
-                                            <label className="flex items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={category.isChecked}
-                                                    onChange={() => handleCheckboxChange(category.id)}
-                                                />
-                                                <span className="ml-2">{category.emoji} {category.name}</span>
-                                            </label>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p className="text-paleBlack text-sm">No categories selected yet.</p>
-                            )}
-                        </div>
+                  <div className="grid grid-cols-2 gap-5 my-4 font-GLight">
+                      {/* Checked Categories (grid-cols-2) */}
+                      <div>
+                        {checked.length > 0 ? (
+                          <ul className="space-y-2 max-h-48 overflow-y-auto">
+                            {checked.map((category) => (
+                              <li key={category.id} className="flex items-center">
+                                <label className="flex items-center">
+                                  <input
+                                      type="checkbox"
+                                      checked={category.isChecked}
+                                      onChange={() => handleCheckboxChange(category.id)}
+                                  />
+                                  <span className="ml-2">{category.emoji} {category.name}</span>
+                                </label>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                            <p className="text-paleBlack text-sm">No categories selected yet.</p>
+                        )}
+                      </div>
 
-                        {/* Unchecked Categories (grid-cols-1) */}
-                        <div>
-                            <ul className="space-y-2 max-h-48 overflow-y-auto">
-                                {unchecked.map((category) => (
-                                    <li key={category.id} className="flex items-center">
-                                        <label className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                checked={category.isChecked}
-                                                onChange={() => handleCheckboxChange(category.id)}
-                                            />
-                                            <span className="ml-2">{category.emoji} {category.name}</span>
-                                        </label>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                      {/* Unchecked Categories (grid-cols-1) */}
+                      <div>
+                        <ul className="space-y-2 max-h-48 overflow-y-auto">
+                          {unchecked.map((category) => (
+                            <li key={category.id} className="flex items-center">
+                              <label className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  checked={category.isChecked}
+                                  onChange={() => handleCheckboxChange(category.id)}
+                                />
+                                  <span className="ml-2">{category.emoji} {category.name}</span>
+                              </label>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
 
                     <div className="flex justify-end items-center">
-                        <button className="confirmBtn" type='submit'>Save changes</button>
+                      <button className="confirmBtn" type='submit'>Save changes</button>
                     </div>
                 </form>
             </Modal>
