@@ -28,7 +28,7 @@ export default function ExpFilters({ label, options, onSelect, icon: Icon , sele
                 tabIndex="0"
                 role="button"
                 onClick={toggleDropdown}
-                className="flex justify-center items-center gap-2 my-2 rounded-md  border border-subheading shadow-md  bg-allWhite px-4 py-2 text-allBlack"
+                className="flex justify-center items-center gap-2 my-2 rounded-md  border  border-subheading shadow-md  bg-allWhite px-4 py-2 text-allBlack"
             >
                 {Icon && <Icon className='text-paleBlack text-base'/>}
                 {label} : {selectedOption || 'Select an option'}
